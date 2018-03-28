@@ -8,10 +8,21 @@ import java.io.IOException;
 
 public class TBSServerImpl implements TBSServer {
 	public String initialise(String path) {
+		String line = "";
+		String separator = "\t";
+		
 		try {
-			BufferedReader theatreData = new BufferedReader(new FileReader(path));
+			BufferedReader data = new BufferedReader(new FileReader(path));
 			
 			// read data here
+			while ((line = data.readLine()) != null) {
+				String[] theatre = line.split(separator);
+				
+				// store theatre data
+				
+				// testing---
+				//System.out.println("T: " + theatre[1]);
+			}
 			
 			return "";
 		} catch (FileNotFoundException e) {
