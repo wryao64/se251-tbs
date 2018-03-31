@@ -50,13 +50,29 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> getArtistIDs() {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> artistIDs = new Vector<String>();
+		
+		// stores artist IDs
+		for (Artist a : artistList) {
+			artistIDs.add(a.getID());
+		}
+		
+		Collections.sort(artistIDs);
+		
+		return artistIDs;
 	}
 
 	public List<String> getArtistNames() {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> artistNames = new Vector<String>();
+		
+		// stores artist IDs
+		for (Artist a : artistList) {
+			artistNames.add(a.getName());
+		}
+		
+		Collections.sort(artistNames);
+		
+		return artistNames;
 	}
 
 	public List<String> getActIDsForArtist(String artistID) {
