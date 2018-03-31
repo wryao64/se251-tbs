@@ -12,6 +12,7 @@ public class TBSServerImpl implements TBSServer {
 	private List<String[]> theatreList = new Vector<String[]>();
 	private List<Artist> artistList = new Vector<Artist>();
 	private List<Act> actList = new Vector<Act>();
+	private List<Performance> performanceList = new Vector<Performance>();
 	
 	public String initialise(String path) {
 		String line = "";
@@ -95,11 +96,16 @@ public class TBSServerImpl implements TBSServer {
 			artistActs.add("ERROR artist does not exist");
 			return artistActs;
 		} else {
-			
-			//artistActs.add();
+			for (Act a : actList) { 
+				if (artistID.equals(a.getArtistID())) { 
+					artistActs.add(a.getID()); 
+				} 
+			} 
+		 
+			//Collections.sort(artistActs); 
 		}
 		
-		return null;
+		return artistActs;
 	}
 
 	public List<String> getPeformanceIDsForAct(String actID) {
@@ -161,9 +167,10 @@ public class TBSServerImpl implements TBSServer {
 
 	public String schedulePerformance(String actID, String theatreID, String startTimeStr, String premiumPriceStr,
 			String cheapSeatsStr) {
+		Performance performance = new Performance(actID, theatreID, startTimeStr, premiumPriceStr, cheapSeatsStr);
+		performanceList.add(performance);
 		
-		
-		return "P1";
+		return performance.getID();
 	}
 
 	public String issueTicket(String performanceID, int rowNumber, int seatNumber) {

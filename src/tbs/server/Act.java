@@ -17,4 +17,8 @@ public class Act {
 	public String getID() {
 		return _actID;
 	}
+	
+	public String getArtistID() { 
+	    return _artistID; 
+	}
 }

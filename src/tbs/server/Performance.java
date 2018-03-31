@@ -11,12 +11,16 @@ public class Performance {
 	
 	public Performance(String actID, String theatreID, String startTimeStr, 
 			String premiumPriceStr, String cheapSeatsStr) {
-		_performanceID = "P" + performanceCount;
+		_performanceID = "P" + ++performanceCount;
 		_actID = actID;
 		_theatreID = theatreID;
 		_startTimeStr = startTimeStr;
 		_premiumPriceStr = premiumPriceStr;
 		_cheapSeatsStr = cheapSeatsStr;
 		
+	}
+	
+	public String getID() {
+		return _performanceID;
 	}
 }
