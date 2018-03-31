@@ -161,8 +161,9 @@ public class TBSServerImpl implements TBSServer {
 
 	public String schedulePerformance(String actID, String theatreID, String startTimeStr, String premiumPriceStr,
 			String cheapSeatsStr) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		
+		return "P1";
 	}
 
 	public String issueTicket(String performanceID, int rowNumber, int seatNumber) {

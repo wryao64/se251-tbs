@@ -72,11 +72,17 @@ public class CLI {
 		System.out.println(actID2);
 		
 		//------------getActIDsForArtist()---------------
-		List<String> acts1 = server.getActIDsForArtist("");
+		List<String> acts1 = server.getActIDsForArtist("A1");
 		
-		System.out.println(acts1.get(0));
+		for (String a : acts1) { 
+			System.out.println(a); 
+		} 
 		
+		//------------schedulePerformance()-------------
+		String performanceID = server.schedulePerformance("A1", "T1", 
+				"2018-03-31T11:00", "$10", "$5");
 		
+		System.out.println(performanceID);
 		
 		
 	}
