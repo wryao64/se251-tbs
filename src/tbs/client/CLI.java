@@ -1,5 +1,8 @@
 package tbs.client;
 
+import java.util.List;
+import java.util.Collections;
+
 import tbs.server.TBSServer;
 import tbs.server.TBSServerImpl;
 
@@ -21,5 +24,17 @@ public class CLI {
 		String actID1 = server.addAct("Lecture 3b: Making Objects", artistID1, 50); // this also checks that the artist ID is used properly
 		System.out.println("Result from adding act to artist 'Ewan' is {" + actID1 + "}");
 		server.dump();
+		
+		//-------------------- TESTING -----------------------
+		
+		//-----------getTheatreIDs()-----------------------
+		List<String> theatreIDs = server.getTheatreIDs();
+		
+		// for testing 
+		for (int i = 0; i < theatreIDs.size(); i++) {
+			System.out.println(theatreIDs.get(i));
+		}
+		
+		//-------------
 	}
 }

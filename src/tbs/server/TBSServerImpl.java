@@ -1,5 +1,6 @@
 package tbs.server;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 import java.io.BufferedReader;
@@ -8,10 +9,11 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class TBSServerImpl implements TBSServer {
+	List<String[]> theatreList = new Vector<String[]>();
+	
 	public String initialise(String path) {
 		String line = "";
 		String separator = "\t";
-		List<String[]> theatreList = new Vector<String[]>();
 		
 		try {
 			BufferedReader data = new BufferedReader(new FileReader(path));
@@ -19,6 +21,9 @@ public class TBSServerImpl implements TBSServer {
 			// read & store theatre data from CSV file
 			while ((line = data.readLine()) != null) {
 				String[] theatre = line.split(separator);
+				// Theatre ID at index 1
+				// Theatre dimension at index 2
+				// Theatre area at index 3
 				theatreList.add(theatre);
 			}
 			
@@ -31,8 +36,16 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> getTheatreIDs() {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> theatreIDs = new Vector<String>();
+		
+		// stores theatre IDs
+		for (String[] t : theatreList) {
+			theatreIDs.add(t[1]);
+		}
+		
+		Collections.sort(theatreIDs);
+		
+		return theatreIDs;
 	}
 
 	public List<String> getArtistIDs() {
