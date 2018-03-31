@@ -80,7 +80,7 @@ public class CLI {
 		}
 		
 		//------------schedulePerformance()-------------
-		String performanceID = server.schedulePerformance("A1", "T1", 
+		String performanceID = server.schedulePerformance("ACT1", "T1", 
 				"2018-03-31T11:00", "$10", "$5");
 		
 		System.out.println(performanceID);

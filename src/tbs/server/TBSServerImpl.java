@@ -167,6 +167,26 @@ public class TBSServerImpl implements TBSServer {
 
 	public String schedulePerformance(String actID, String theatreID, String startTimeStr, String premiumPriceStr,
 			String cheapSeatsStr) {
+		//checks if any parameters are missing
+		if (actID.equals("")) {
+			return "ERROR missing act ID";
+		} else if (theatreID.equals("")) {
+			return "ERROR missing theatre ID";
+		} else if (startTimeStr.equals("")) {
+			return "ERROR missing start time";
+		} else if (premiumPriceStr.equals("")) {
+			return "ERROR missing premium price";
+		} else if (cheapSeatsStr.equals("")) {
+			return "ERROR missing cheap seat price";
+		}
+		
+		if (!checkActExists(actID)) {
+			return "ERROR act does not exist";
+		} else if (!checkTheatreExists(theatreID)) {
+			return "ERROR theatre does not exist";
+		}
+		// INCLUDE ERROR CHECKING FOR FORMAT OF OTHER PARAMETERS
+		
 		Performance performance = new Performance(actID, theatreID, startTimeStr, premiumPriceStr, cheapSeatsStr);
 		performanceList.add(performance);
 		
@@ -201,6 +221,26 @@ public class TBSServerImpl implements TBSServer {
 	public boolean checkArtistExists(String name) {
 		for (Artist a : artistList) {
 			if (name.equals(a.getName())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean checkActExists(String actID) {
+		for (Act a : actList) {
+			if (actID.equals(a.getID())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean checkTheatreExists(String theatreID) {
+		for (String[] t : theatreList) {
+			if (theatreID.equals(t[1])) {
 				return true;
 			}
 		}
