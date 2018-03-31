@@ -67,16 +67,20 @@ public class CLI {
 		//------------addAct()-------------------------
 		String actID1 = server.addAct("Act 1", "A1", 5);
 		String actID2 = server.addAct("Act 2", "A2", 10);
+		String actID3 = server.addAct("The Show", "A1", 10);
 		
-		System.out.println(actID1);
-		System.out.println(actID2);
+//		System.out.println(actID1);
+//		System.out.println(actID2);
 		
 		//------------getActIDsForArtist()---------------
-		List<String> acts1 = server.getActIDsForArtist("");
+		List<String> acts1 = server.getActIDsForArtist("A1");
 		
-		System.out.println(acts1.get(0));
+		for (String a : acts1) {
+			System.out.println(a);
+		}
 		
 		
+		//-------------
 		
 		
 	}
