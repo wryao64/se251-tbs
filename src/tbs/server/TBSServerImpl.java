@@ -11,6 +11,7 @@ import java.io.IOException;
 public class TBSServerImpl implements TBSServer {
 	private List<String[]> theatreList = new Vector<String[]>();
 	private List<Artist> artistList = new Vector<Artist>();
+	private List<Act> actList = new Vector<Act>();
 	
 	public String initialise(String path) {
 		String line = "";
@@ -111,8 +112,36 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public String addAct(String title, String artistID, int minutesDuration) {
-		// TODO Auto-generated method stub
-		return null;
+		//If there is a problem with the title (is empty), 
+		//artist ID (is empty, or there is no artist with that ID), 
+		//or duration (is less than or equal to zero), then the request fails.
+		boolean artistExists = false;
+		
+		if (title.equals("")) {
+			return "ERROR missing title";
+		} else if (artistID.equals("")) {
+			return "ERROR missing artist ID";
+		} 
+		
+		// checks if artist exists
+		for (Artist a : artistList) {
+			if (artistID.equals(a.getID())) {
+				artistExists = true;
+				break;
+			}
+		}
+		if (!artistExists) {
+			return "ERROR artist does not exist";
+		}
+		
+		if (minutesDuration <= 0) {
+			return "ERROR act duration is incorrect";
+		}
+		
+		Act act = new Act(title, artistID, minutesDuration);
+		actList.add(act);
+		
+		return act.getID();
 	}
 
 	public String schedulePerformance(String actID, String theatreID, String startTimeStr, String premiumPriceStr,

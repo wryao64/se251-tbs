@@ -30,22 +30,23 @@ public class CLI {
 		//-----------getTheatreIDs()-----------------------
 		List<String> theatreIDs = server.getTheatreIDs();
 		
-		for (String t : theatreIDs) {
-			System.out.println(t);
-		}
+//		for (String t : theatreIDs) {
+//			System.out.println(t);
+//		}
 //		server.dump();
 
 		//-------------addArtist()--------------------
 		String artistID1 = server.addArtist("Ewan");
-		System.out.println("Result from adding artist 'Ewan' is {" + artistID1 + "}");
 		String artistID2 = server.addArtist("Someone");
-		System.out.println("Result from adding artist 'Someone' is {" + artistID2 + "}");
 		String artistID3 = server.addArtist(" Ewan ");
-		System.out.println("Result from adding artist 'Ewan' is {" + artistID3 + "}");
 		String artistID4 = server.addArtist("");
-		System.out.println("Result from adding artist '' is {" + artistID4 + "}");
 		String artistID5 = server.addArtist("BTS");
-		System.out.println("Result from adding artist '' is {" + artistID5 + "}");
+		
+//		System.out.println("Result from adding artist 'Ewan' is {" + artistID1 + "}");
+//		System.out.println("Result from adding artist 'Someone' is {" + artistID2 + "}");
+//		System.out.println("Result from adding artist 'Ewan' is {" + artistID3 + "}");
+//		System.out.println("Result from adding artist '' is {" + artistID4 + "}");
+//		System.out.println("Result from adding artist 'BTS' is {" + artistID5 + "}");
 		
 //		server.dump();
 		
@@ -62,5 +63,12 @@ public class CLI {
 //		for (String a : artistNames) {
 //			System.out.println(a);
 //		}
+		
+		//------------addAct()-------------------------
+		String addActMsg = server.addAct("Act 1", "A1", 5);
+		
+		System.out.println(addActMsg);
+		
+		
 	}
 }
