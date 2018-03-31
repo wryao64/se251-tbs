@@ -12,6 +12,7 @@ public class TBSServerImpl implements TBSServer {
 	private List<String[]> theatreList = new Vector<String[]>();
 	private List<Artist> artistList = new Vector<Artist>();
 	private List<Act> actList = new Vector<Act>();
+	private List<Performance> performanceList = new Vector<Performance>();
 	
 	public String initialise(String path) {
 		String line = "";
@@ -77,12 +78,12 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> getActIDsForArtist(String artistID) {
-		List<String> artistActs = new Vector<String>();
+		List<String> actsForArtist = new Vector<String>();
 		boolean artistExists = false;
 		
 		if (artistID.equals("")) {
-			artistActs.add("ERROR missing artist ID");
-			return artistActs;
+			actsForArtist.add("ERROR missing artist ID");
+			return actsForArtist;
 		}
 		
 		// checks if the artist exists
@@ -93,24 +94,41 @@ public class TBSServerImpl implements TBSServer {
 			}
 		}
 		if (!artistExists) {
-			artistActs.add("ERROR artist does not exist");
-			return artistActs;
+			actsForArtist.add("ERROR artist does not exist");
+			return actsForArtist;
 		} else {
-			for (Act a : actList) {
-				if (artistID.equals(a.getArtistID())) {
-					artistActs.add(a.getID());
-				}
-			}
-
-			//Collections.sort(artistActs);
+			for (Act a : actList) { 
+				if (artistID.equals(a.getArtistID())) { 
+					actsForArtist.add(a.getID()); 
+				} 
+			} 
+		 
+			//Collections.sort(artistActs); 
 		}
 		
-		return artistActs;
+		return actsForArtist;
 	}
 
 	public List<String> getPeformanceIDsForAct(String actID) {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> performanceForActs = new Vector<String>();
+		
+		if (actID.equals("")) {
+			performanceForActs.add("ERROR missing act ID");
+			return performanceForActs;
+		}
+		
+		if (!checkActExists(actID)) {
+			performanceForActs.add("ERROR act does not exist");
+			return performanceForActs;
+		} else {
+			for (Performance p : performanceList) { 
+				if (actID.equals(p.getActID())) { 
+					performanceForActs.add(p.getID()); 
+				} 
+			} 
+		}
+		
+		return performanceForActs;
 	}
 
 	public List<String> getTicketIDsForPerformance(String performanceID) {
@@ -167,8 +185,32 @@ public class TBSServerImpl implements TBSServer {
 
 	public String schedulePerformance(String actID, String theatreID, String startTimeStr, String premiumPriceStr,
 			String cheapSeatsStr) {
-		// TODO Auto-generated method stub
-		return null;
+		//checks if any parameters are missing
+		if (actID.equals("")) {
+			return "ERROR missing act ID";
+		} else if (theatreID.equals("")) {
+			return "ERROR missing theatre ID";
+		} else if (startTimeStr.equals("")) {
+			return "ERROR missing start time";
+		} else if (premiumPriceStr.equals("")) {
+			return "ERROR missing premium price";
+		} else if (cheapSeatsStr.equals("")) {
+			return "ERROR missing cheap seat price";
+		}
+		
+		if (!checkActExists(actID)) {
+			return "ERROR act does not exist";
+		} else if (!checkTheatreExists(theatreID)) {
+			return "ERROR theatre does not exist";
+		}
+		// INCLUDE ERROR CHECKING FOR FORMAT OF OTHER PARAMETERS
+		
+		// ASSIGN PRICES TO SEATS
+		
+		Performance performance = new Performance(actID, theatreID, startTimeStr, premiumPriceStr, cheapSeatsStr);
+		performanceList.add(performance);
+		
+		return performance.getID();
 	}
 
 	public String issueTicket(String performanceID, int rowNumber, int seatNumber) {
@@ -199,6 +241,26 @@ public class TBSServerImpl implements TBSServer {
 	public boolean checkArtistExists(String name) {
 		for (Artist a : artistList) {
 			if (name.equals(a.getName())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean checkActExists(String actID) {
+		for (Act a : actList) {
+			if (actID.equals(a.getID())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean checkTheatreExists(String theatreID) {
+		for (String[] t : theatreList) {
+			if (theatreID.equals(t[1])) {
 				return true;
 			}
 		}
