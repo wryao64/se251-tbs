@@ -10,6 +10,7 @@ import java.io.IOException;
 
 public class TBSServerImpl implements TBSServer {
 	List<String[]> theatreList = new Vector<String[]>();
+	//List<String[]> artistList = new Vector<String[]>();
 	
 	public String initialise(String path) {
 		String line = "";
@@ -74,8 +75,10 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public String addArtist(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		Artist artist = new Artist(name);
+		String artistID = artist.getID();
+
+		return artistID;
 	}
 
 	public String addAct(String title, String artistID, int minutesDuration) {
@@ -105,7 +108,7 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> dump() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 }
