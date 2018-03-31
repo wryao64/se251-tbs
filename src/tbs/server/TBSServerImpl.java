@@ -13,6 +13,7 @@ public class TBSServerImpl implements TBSServer {
 	private List<Artist> artistList = new Vector<Artist>();
 	private List<Act> actList = new Vector<Act>();
 	private List<Performance> performanceList = new Vector<Performance>();
+	private List<Ticket> ticketList = new Vector<Ticket>();
 	
 	public String initialise(String path) {
 		String line = "";
@@ -214,7 +215,11 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public String issueTicket(String performanceID, int rowNumber, int seatNumber) {
-		// TODO Auto-generated method stub
+		// will probably need to call seatsAvailable
+		
+		Ticket ticket = new Ticket("P1", 2, 2);
+		ticketList.add(ticket);
+		
 		return null;
 	}
 
