@@ -65,9 +65,18 @@ public class CLI {
 //		}
 		
 		//------------addAct()-------------------------
-		String addActMsg = server.addAct("Act 1", "A1", 5);
+		String actID1 = server.addAct("Act 1", "A1", 5);
+		String actID2 = server.addAct("Act 2", "A2", 10);
 		
-		System.out.println(addActMsg);
+		System.out.println(actID1);
+		System.out.println(actID2);
+		
+		//------------getActIDsForArtist()---------------
+		List<String> acts1 = server.getActIDsForArtist("");
+		
+		System.out.println(acts1.get(0));
+		
+		
 		
 		
 	}
