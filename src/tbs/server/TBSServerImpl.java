@@ -79,12 +79,13 @@ public class TBSServerImpl implements TBSServer {
 	public List<String> getActIDsForArtist(String artistID) {
 		List<String> artistActs = new Vector<String>();
 		boolean artistExists = false;
-
+		
 		if (artistID.equals("")) {
 			artistActs.add("ERROR missing artist ID");
 			return artistActs;
 		}
 		
+		// checks if the artist exists
 		for (Artist a : artistList) {
 			if (artistID.equals(a.getID())) {
 				artistExists = true;
@@ -95,11 +96,16 @@ public class TBSServerImpl implements TBSServer {
 			artistActs.add("ERROR artist does not exist");
 			return artistActs;
 		} else {
-			
-			//artistActs.add();
+			for (Act a : actList) {
+				if (artistID.equals(a.getArtistID())) {
+					artistActs.add(a.getID());
+				}
+			}
+
+			//Collections.sort(artistActs);
 		}
 		
-		return null;
+		return artistActs;
 	}
 
 	public List<String> getPeformanceIDsForAct(String actID) {
