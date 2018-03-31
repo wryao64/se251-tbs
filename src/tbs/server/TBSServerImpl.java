@@ -78,12 +78,12 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> getActIDsForArtist(String artistID) {
-		List<String> artistActs = new Vector<String>();
+		List<String> actsForArtist = new Vector<String>();
 		boolean artistExists = false;
 
 		if (artistID.equals("")) {
-			artistActs.add("ERROR missing artist ID");
-			return artistActs;
+			actsForArtist.add("ERROR missing artist ID");
+			return actsForArtist;
 		}
 		
 		for (Artist a : artistList) {
@@ -93,24 +93,41 @@ public class TBSServerImpl implements TBSServer {
 			}
 		}
 		if (!artistExists) {
-			artistActs.add("ERROR artist does not exist");
-			return artistActs;
+			actsForArtist.add("ERROR artist does not exist");
+			return actsForArtist;
 		} else {
 			for (Act a : actList) { 
 				if (artistID.equals(a.getArtistID())) { 
-					artistActs.add(a.getID()); 
+					actsForArtist.add(a.getID()); 
 				} 
 			} 
 		 
 			//Collections.sort(artistActs); 
 		}
 		
-		return artistActs;
+		return actsForArtist;
 	}
 
 	public List<String> getPeformanceIDsForAct(String actID) {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> performanceForActs = new Vector<String>();
+		
+		if (actID.equals("")) {
+			performanceForActs.add("ERROR missing act ID");
+			return performanceForActs;
+		}
+		
+		if (!checkActExists(actID)) {
+			performanceForActs.add("ERROR act does not exist");
+			return performanceForActs;
+		} else {
+			for (Performance p : performanceList) { 
+				if (actID.equals(p.getActID())) { 
+					performanceForActs.add(p.getID()); 
+				} 
+			} 
+		}
+		
+		return performanceForActs;
 	}
 
 	public List<String> getTicketIDsForPerformance(String performanceID) {
@@ -186,6 +203,8 @@ public class TBSServerImpl implements TBSServer {
 			return "ERROR theatre does not exist";
 		}
 		// INCLUDE ERROR CHECKING FOR FORMAT OF OTHER PARAMETERS
+		
+		// ASSIGN PRICES TO SEATS
 		
 		Performance performance = new Performance(actID, theatreID, startTimeStr, premiumPriceStr, cheapSeatsStr);
 		performanceList.add(performance);

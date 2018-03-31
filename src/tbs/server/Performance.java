@@ -23,4 +23,9 @@ public class Performance {
 	public String getID() {
 		return _performanceID;
 	}
+	
+	public String getActID() {
+		return _actID;
+	}
+
 }

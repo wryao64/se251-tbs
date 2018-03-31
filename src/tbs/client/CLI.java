@@ -75,16 +75,30 @@ public class CLI {
 		//------------getActIDsForArtist()---------------
 		List<String> acts1 = server.getActIDsForArtist("A1");
 		
-		for (String a : acts1) { 
-			System.out.println(a); 
-		}
+//		for (String a : acts1) { 
+//			System.out.println(a); 
+//		}
 		
 		//------------schedulePerformance()-------------
-		String performanceID = server.schedulePerformance("ACT1", "T1", 
+		String performanceID1 = server.schedulePerformance("ACT1", "T1", 
 				"2018-03-31T11:00", "$10", "$5");
+		String performanceID2 = server.schedulePerformance("ACT2", "T1", 
+				"2018-04-01T11:00", "$10", "$5");
+		String performanceID3 = server.schedulePerformance("ACT1", "T1", 
+				"2018-03-02T11:00", "$10", "$5");
 		
-		System.out.println(performanceID);
+//		System.out.println(performanceID1);
+//		System.out.println(performanceID2);
+//		System.out.println(performanceID3);
 		
+		//-------------getPeformanceIDsForAct()--------
+		List<String> performances1 = server.getPeformanceIDsForAct("ACT1");
+		
+		for (String p : performances1) { 
+			System.out.println(p); 
+		}
+		
+		//--------------
 		
 	}
 }
