@@ -9,8 +9,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class TBSServerImpl implements TBSServer {
-	List<String[]> theatreList = new Vector<String[]>();
-	//List<String[]> artistList = new Vector<String[]>();
+	private List<String[]> theatreList = new Vector<String[]>();
+	private List<Artist> artistList = new Vector<Artist>();
 	
 	public String initialise(String path) {
 		String line = "";
@@ -75,10 +75,23 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public String addArtist(String name) {
+		if (name.equals("")) {
+			return "ERROR no name entered";
+		}
+		
+		name = name.toLowerCase().trim();
+		
+		// checks if artist already exists
+		for (Artist a : artistList) {
+			if (name.equals(a.getName())) {
+				return "ERROR artist already exists";
+			}
+		}
+		
 		Artist artist = new Artist(name);
-		String artistID = artist.getID();
+		artistList.add(artist);
 
-		return artistID;
+		return artist.getID();
 	}
 
 	public String addAct(String title, String artistID, int minutesDuration) {
@@ -108,7 +121,12 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> dump() {
-		
+		// prints all artists' IDs
+		if (artistList.size() != 0) {
+			for (Artist a : artistList) {
+				System.out.println(a.getName());
+			}
+		}
 		return null;
 	}
 }

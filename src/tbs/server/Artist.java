@@ -7,11 +7,15 @@ public class Artist {
 	
 	public Artist(String name) {
 		_name = name;
-		_artistID = "" + ++artistCount;
+		_artistID = "A" + ++artistCount;
 		//System.out.println(artistCount);
 	}
 	
+	public String getName() {
+		return _name;
+	}
+	
 	public String getID() {
-		return this._artistID;
+		return _artistID;
 	}
 }

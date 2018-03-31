@@ -17,9 +17,9 @@ public class CLI {
 		System.out.println("Result from initialisation is {" + result + "}");  // Put in { } to make empty strings easier to see.
 		server.dump(); // Implement dump() to print something useful here to determine whether your initialise method has worked.
 		
-		String artistID1 = server.addArtist("Ewan");
-		System.out.println("Result from adding artist 'Ewan' is {" + artistID1 + "}");
-		server.dump(); // Check that the server has been updated
+//		String artistID1 = server.addArtist("Ewan");
+//		System.out.println("Result from adding artist 'Ewan' is {" + artistID1 + "}");
+//		server.dump(); // Check that the server has been updated
 		
 //		String actID1 = server.addAct("Lecture 3b: Making Objects", artistID1, 50); // this also checks that the artist ID is used properly
 //		System.out.println("Result from adding act to artist 'Ewan' is {" + actID1 + "}");
@@ -34,12 +34,19 @@ public class CLI {
 //		for (int i = 0; i < theatreIDs.size(); i++) {
 //			System.out.println(theatreIDs.get(i));
 //		}
-		server.dump();
+		//server.dump();
 		
 		//-------------addArtist()--------------------
+		String artistID1 = server.addArtist("Ewan");
+		System.out.println("Result from adding artist 'Ewan' is {" + artistID1 + "}");
 		String artistID2 = server.addArtist("Someone");
 		System.out.println("Result from adding artist 'Someone' is {" + artistID2 + "}");
+		String artistID3 = server.addArtist(" Ewan ");
+		System.out.println("Result from adding artist 'Ewan' is {" + artistID3 + "}");
+		String artistID4 = server.addArtist("");
+		System.out.println("Result from adding artist '' is {" + artistID4 + "}");
 		
+		server.dump();
 		//-------------
 	}
 }
