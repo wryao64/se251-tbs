@@ -17,9 +17,9 @@ public class CLI {
 		System.out.println("Result from initialisation is {" + result + "}");  // Put in { } to make empty strings easier to see.
 		server.dump(); // Implement dump() to print something useful here to determine whether your initialise method has worked.
 		
-		String artistID1 = server.addArtist("Ewan");
-		System.out.println("Result from adding artist 'Ewan' is {" + artistID1 + "}");
-		server.dump(); // Check that the server has been updated
+//		String artistID1 = server.addArtist("Ewan");
+//		System.out.println("Result from adding artist 'Ewan' is {" + artistID1 + "}");
+//		server.dump(); // Check that the server has been updated
 		
 //		String actID1 = server.addAct("Lecture 3b: Making Objects", artistID1, 50); // this also checks that the artist ID is used properly
 //		System.out.println("Result from adding act to artist 'Ewan' is {" + actID1 + "}");
@@ -30,16 +30,45 @@ public class CLI {
 		//-----------getTheatreIDs()-----------------------
 		List<String> theatreIDs = server.getTheatreIDs();
 		
-		// for testing 
-//		for (int i = 0; i < theatreIDs.size(); i++) {
-//			System.out.println(theatreIDs.get(i));
+//		for (String t : theatreIDs) {
+//			System.out.println(t);
 //		}
-		server.dump();
-		
+//		server.dump();
+
 		//-------------addArtist()--------------------
+		String artistID1 = server.addArtist("Ewan");
 		String artistID2 = server.addArtist("Someone");
-		System.out.println("Result from adding artist 'Someone' is {" + artistID2 + "}");
+		String artistID3 = server.addArtist(" Ewan ");
+		String artistID4 = server.addArtist("");
+		String artistID5 = server.addArtist("BTS");
 		
-		//-------------
+//		System.out.println("Result from adding artist 'Ewan' is {" + artistID1 + "}");
+//		System.out.println("Result from adding artist 'Someone' is {" + artistID2 + "}");
+//		System.out.println("Result from adding artist 'Ewan' is {" + artistID3 + "}");
+//		System.out.println("Result from adding artist '' is {" + artistID4 + "}");
+//		System.out.println("Result from adding artist 'BTS' is {" + artistID5 + "}");
+		
+//		server.dump();
+		
+		//-----------getArtistIDs()--------------------------
+		List<String> artistIDs = server.getArtistIDs();
+		
+//		for (String a : artistIDs) {
+//			System.out.println(a);
+//		}
+		
+		//-------------getArtistNames()--------------------------
+		List<String> artistNames = server.getArtistNames();
+		
+//		for (String a : artistNames) {
+//			System.out.println(a);
+//		}
+		
+		//------------addAct()-------------------------
+		String addActMsg = server.addAct("Act 1", "A1", 5);
+		
+		System.out.println(addActMsg);
+		
+		
 	}
 }

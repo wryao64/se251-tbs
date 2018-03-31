@@ -9,8 +9,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class TBSServerImpl implements TBSServer {
-	List<String[]> theatreList = new Vector<String[]>();
-	//List<String[]> artistList = new Vector<String[]>();
+	private List<String[]> theatreList = new Vector<String[]>();
+	private List<Artist> artistList = new Vector<Artist>();
+	private List<Act> actList = new Vector<Act>();
 	
 	public String initialise(String path) {
 		String line = "";
@@ -50,13 +51,29 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> getArtistIDs() {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> artistIDs = new Vector<String>();
+		
+		// stores artist IDs
+		for (Artist a : artistList) {
+			artistIDs.add(a.getID());
+		}
+		
+		Collections.sort(artistIDs);
+		
+		return artistIDs;
 	}
 
 	public List<String> getArtistNames() {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> artistNames = new Vector<String>();
+		
+		// stores artist IDs
+		for (Artist a : artistList) {
+			artistNames.add(a.getName());
+		}
+		
+		Collections.sort(artistNames);
+		
+		return artistNames;
 	}
 
 	public List<String> getActIDsForArtist(String artistID) {
@@ -75,15 +92,56 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public String addArtist(String name) {
+		if (name.equals("")) {
+			return "ERROR no name entered";
+		}
+		
+		name = name.toLowerCase().trim();
+		
+		// checks if artist already exists
+		for (Artist a : artistList) {
+			if (name.equals(a.getName())) {
+				return "ERROR artist already exists";
+			}
+		}
+		
 		Artist artist = new Artist(name);
-		String artistID = artist.getID();
+		artistList.add(artist);
 
-		return artistID;
+		return artist.getID();
 	}
 
 	public String addAct(String title, String artistID, int minutesDuration) {
-		// TODO Auto-generated method stub
-		return null;
+		//If there is a problem with the title (is empty), 
+		//artist ID (is empty, or there is no artist with that ID), 
+		//or duration (is less than or equal to zero), then the request fails.
+		boolean artistExists = false;
+		
+		if (title.equals("")) {
+			return "ERROR missing title";
+		} else if (artistID.equals("")) {
+			return "ERROR missing artist ID";
+		} 
+		
+		// checks if artist exists
+		for (Artist a : artistList) {
+			if (artistID.equals(a.getID())) {
+				artistExists = true;
+				break;
+			}
+		}
+		if (!artistExists) {
+			return "ERROR artist does not exist";
+		}
+		
+		if (minutesDuration <= 0) {
+			return "ERROR act duration is incorrect";
+		}
+		
+		Act act = new Act(title, artistID, minutesDuration);
+		actList.add(act);
+		
+		return act.getID();
 	}
 
 	public String schedulePerformance(String actID, String theatreID, String startTimeStr, String premiumPriceStr,
@@ -108,7 +166,12 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> dump() {
-		
+		// prints all artists' IDs
+		if (artistList.size() != 0) {
+			for (Artist a : artistList) {
+				System.out.println(a.getName());
+			}
+		}
 		return null;
 	}
 }
