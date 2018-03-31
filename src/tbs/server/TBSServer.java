@@ -12,7 +12,7 @@ import java.util.List;
  * Seats in theatres are arranged as a square block, with as many seats in a row as there are rows. 
  * A seat is identified by the row number it is in and its position in the row. 
  * About half the seats are considered "premium" seating. These are the lowest numbered rows.
- * @version 20180312
+ * @version <font color=red>20180329. Note that further (and possibly more recent) updates are listed on the Canvas page for the assignmet.</font>
  * @author Ewan Tempero
  */
 public interface TBSServer {
@@ -27,6 +27,7 @@ public interface TBSServer {
 	 *  
 	 * <p>If there is no file associated with the path, or the file format is incorrect, then
 	 * the request fails.
+	 * <p><font color=blue>Note that this is just a text file and so use standard Java library classes etc for reading text file.</font>
 	 *  
 	 * @param path The path indicating the file to use for the initialisation.
 	 * @return An empty string if the initialisation is successful, otherwise a 
@@ -85,6 +86,7 @@ public interface TBSServer {
 	 * @return A list of performance IDs in alphabetical order
 	 * If the request fails, there should be exactly one entry in the list, and that will be a message explaining 
 	 * what went wrong, beginning with ERROR (e.g. "ERROR actID is empty").
+	 * <font color=red>Yes 'performance' is spelled incorrectly in the name of this method. This will not change.</font>
 	 * 
 	 * <p><b>Marks: 1</b>
 	 */
@@ -106,12 +108,11 @@ public interface TBSServer {
 	/**
 	 * Request that an artist with the specified name be added to the server.
 	 * <p>If there is a problem with the name (is empty, or there is already
-	 * an artist with the same name) then the request fails. 
+	 * an artist with the same name <font color=red>case insensitive</font>) then the request fails. 
 	 * @param name The name of the artist.
 	 * @return The ID for the new artist if the addition is successful, otherwise a 
 	 * message explaining what went wrong, beginning with ERROR (e.g. "ERROR artist already exists"). 
 	 * The ID must be unique to all artists but is otherwise implementation dependent.
-	 * 
 	 * <p><b>Marks: 1</b>
 	 */
 	String addArtist(String name);
@@ -119,7 +120,8 @@ public interface TBSServer {
 	/**
 	 * Request that an act by the specified artist with the specified title and of the specified duration be added
 	 * to the server. 
-	 * <p>If there is a problem with the title (is empty), artist ID (is not unique or is empty), or 
+	 * <p>If there is a problem with the title (is empty), artist ID (is empty, or <font color=red>there is no
+	 * artist with that ID</font>), or 
 	 * duration (is less than or equal to zero), then the request fails.
 	 * @param title The title of the act
 	 * @param artistID The ID to be used to identify the artist
@@ -140,8 +142,9 @@ public interface TBSServer {
 	 * are rows 1 to floor(Number of Rows/2). The remaining seats have the cheap seat price.
 	 * For example, if the seating dimension is 5, then rows 1-2 will be premium, and 3-5 cheap.
 	 * 
-	 * <p>If there is a problem with the act ID (is not unique), theatre ID (no such theatre exists),
-	 * or other parameters (wrong format), then the request fails.  
+	 * <p>If there is a problem with the act ID (<font color=red>no such artist exists</font>), theatre ID (no such theatre exists),
+	 * or other parameters (wrong format), then the request fails.  <font color=blue>There is no requirement to check whether the performance
+	 * clashes with an existing performance (e.g. overlaps in some way). The seat prices can be assumed to be dollars only (no cents).</font>
 	 * @param actID The ID that identifies the act. It must be unique with respect to acts already managed by the server.
 	 * @param theatreID The ID of the theatre. There must be a theatre with this ID.
 	 * @param startTimeStr The start time for this performance. It must be in the ISO8601 format yyyy-mm-ddThh:mm (zero-padded)

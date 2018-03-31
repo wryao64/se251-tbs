@@ -1,6 +1,7 @@
 package tbs.server;
 
 import java.util.List;
+import java.util.Vector;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,18 +11,15 @@ public class TBSServerImpl implements TBSServer {
 	public String initialise(String path) {
 		String line = "";
 		String separator = "\t";
+		List<String[]> theatreList = new Vector<String[]>();
 		
 		try {
 			BufferedReader data = new BufferedReader(new FileReader(path));
 			
-			// read data here
+			// read & store theatre data from CSV file
 			while ((line = data.readLine()) != null) {
 				String[] theatre = line.split(separator);
-				
-				// store theatre data
-				
-				// testing---
-				//System.out.println("T: " + theatre[1]);
+				theatreList.add(theatre);
 			}
 			
 			return "";
