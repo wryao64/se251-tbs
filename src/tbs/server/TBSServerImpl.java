@@ -80,7 +80,6 @@ public class TBSServerImpl implements TBSServer {
 
 	public List<String> getActIDsForArtist(String artistID) {
 		List<String> actsForArtist = new Vector<String>();
-		boolean artistExists = false;
 		
 		if (artistID.equals("")) {
 			actsForArtist.add("ERROR missing artist ID");
@@ -88,13 +87,7 @@ public class TBSServerImpl implements TBSServer {
 		}
 		
 		// checks if the artist exists
-		for (Artist a : artistList) {
-			if (artistID.equals(a.getID())) {
-				artistExists = true;
-				break;
-			}
-		}
-		if (!artistExists) {
+		if (!checkArtistExists(artistID)) {
 			actsForArtist.add("ERROR artist does not exist");
 			return actsForArtist;
 		} else {
@@ -103,8 +96,6 @@ public class TBSServerImpl implements TBSServer {
 					actsForArtist.add(a.getID()); 
 				} 
 			} 
-		 
-			//Collections.sort(artistActs); 
 		}
 		
 		return actsForArtist;
@@ -138,13 +129,22 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public String addArtist(String name) {
+		boolean artistExists = false;
+		
 		if (name.equals("")) {
 			return "ERROR no name entered";
 		}
 		
 		name = name.toLowerCase().trim();
 		
-		if (checkArtistExists(name)) {
+		for (Artist a : artistList) {
+			if (name.equals(a.getName())) {
+				artistExists = true;
+				break;
+			}
+		}
+		
+		if (artistExists) {
 			return "ERROR artist already exists";
 		}
 		
@@ -243,9 +243,9 @@ public class TBSServerImpl implements TBSServer {
 		return null;
 	}
 	
-	public boolean checkArtistExists(String name) {
+	public boolean checkArtistExists(String artistID) {
 		for (Artist a : artistList) {
-			if (name.equals(a.getName())) {
+			if (artistID.equals(a.getID())) {
 				return true;
 			}
 		}
@@ -272,4 +272,14 @@ public class TBSServerImpl implements TBSServer {
 		
 		return false;
 	}
+	
+//	public boolean checkExists(String ID, List<?> list) {
+//		for (<?> i : list) {
+//			if (ID.equals(t[1])) {
+//				return true;
+//			}
+//		}
+//		
+//		return false;
+//	}
 }
