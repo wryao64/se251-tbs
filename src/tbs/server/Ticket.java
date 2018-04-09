@@ -14,4 +14,8 @@ public class Ticket {
 		_seatNumber = seatNumber;
 		_performanceID = performanceID;
 	}
+	
+	public String getID() {
+		return _ticketID;
+	}
 }

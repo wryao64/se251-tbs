@@ -215,12 +215,17 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public String issueTicket(String performanceID, int rowNumber, int seatNumber) {
+		// error when performance ID or seat doesn't exist, or seat is taken
+		if (!checkPerformanceExists(performanceID)) {
+			return "ERROR performance does not exist";
+		}
+		// insert seat error checking
 		// will probably need to call seatsAvailable
 		
 		Ticket ticket = new Ticket("P1", 2, 2);
 		ticketList.add(ticket);
 		
-		return null;
+		return ticket.getID();
 	}
 
 	public List<String> seatsAvailable(String performanceID) {
@@ -256,6 +261,16 @@ public class TBSServerImpl implements TBSServer {
 	public boolean checkActExists(String actID) {
 		for (Act a : actList) {
 			if (actID.equals(a.getID())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean checkPerformanceExists(String performanceID) {
+		for (Performance p : performanceList) {
+			if (performanceID.equals(p.getID())) {
 				return true;
 			}
 		}

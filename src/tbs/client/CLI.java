@@ -98,7 +98,9 @@ public class CLI {
 			System.out.println(p); 
 		}
 		
-		//--------------
+		//--------------issueTicket()------------------
+		String ticket1 = server.issueTicket("P1", 3, 5);
 		
+		System.out.println(ticket1);
 	}
 }
