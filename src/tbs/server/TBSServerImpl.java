@@ -9,7 +9,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class TBSServerImpl implements TBSServer {
-	private List<String[]> theatreList = new Vector<String[]>();
+	//private List<String[]> theatreList = new Vector<String[]>();
+	private List<Theatre> theatreList = new Vector<Theatre>();
 	private List<Artist> artistList = new Vector<Artist>();
 	private List<Act> actList = new Vector<Act>();
 	private List<Performance> performanceList = new Vector<Performance>();
@@ -23,11 +24,23 @@ public class TBSServerImpl implements TBSServer {
 			BufferedReader data = new BufferedReader(new FileReader(path));
 			
 			// read & store theatre data from CSV file
+//			while ((line = data.readLine()) != null) {
+//				String[] theatre = line.split(separator);
+//				// Theatre ID at index 1
+//				// Theatre dimension at index 2
+//				// Theatre area at index 3
+//				theatreList.add(theatre);
+//			}
+			
 			while ((line = data.readLine()) != null) {
-				String[] theatre = line.split(separator);
+				String[] theatreData = line.split(separator);
+				String ID = theatreData[1];
+				int dimensions = Integer.parseInt(theatreData[2]);
+				int area = Integer.parseInt(theatreData[3]);
 				// Theatre ID at index 1
 				// Theatre dimension at index 2
 				// Theatre area at index 3
+				Theatre theatre = new Theatre(ID, dimensions, area);
 				theatreList.add(theatre);
 			}
 			
@@ -43,8 +56,11 @@ public class TBSServerImpl implements TBSServer {
 		List<String> theatreIDs = new Vector<String>();
 		
 		// stores theatre IDs
-		for (String[] t : theatreList) {
-			theatreIDs.add(t[1]);
+//		for (String[] t : theatreList) {
+//			theatreIDs.add(t[1]);
+//		}
+		for (Theatre t : theatreList) {
+			theatreIDs.add(t.getID());
 		}
 		
 		Collections.sort(theatreIDs);
@@ -211,6 +227,8 @@ public class TBSServerImpl implements TBSServer {
 		Performance performance = new Performance(actID, theatreID, startTimeStr, premiumPriceStr, cheapSeatsStr);
 		performanceList.add(performance);
 		
+		// CREATE SEATING ARRAY 
+		
 		return performance.getID();
 	}
 
@@ -224,8 +242,17 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> seatsAvailable(String performanceID) {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> availableSeatList = new Vector<String>();
+		//using performanceID, get theatreID
+		for (Performance p : performanceList) {
+			if (p.equals(performanceID)) {
+				Performance performance = p;
+				availableSeatList = performance.checkAvailableSeats();
+				break;
+			}
+		}
+
+		return availableSeatList;
 	}
 
 	public List<String> salesReport(String actID) {
@@ -264,8 +291,8 @@ public class TBSServerImpl implements TBSServer {
 	}
 	
 	public boolean checkTheatreExists(String theatreID) {
-		for (String[] t : theatreList) {
-			if (theatreID.equals(t[1])) {
+		for (Theatre t : theatreList) {
+			if (theatreID.equals(t.getID())) {
 				return true;
 			}
 		}
