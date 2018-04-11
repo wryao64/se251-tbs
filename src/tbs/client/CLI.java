@@ -42,7 +42,7 @@ public class CLI {
 		String artistID4 = server.addArtist("");
 		String artistID5 = server.addArtist("BTS");
 		
-//		System.out.println("Result from adding artist 'Ewan' is {" + artistID1 + "}");
+		System.out.println("Result from adding artist 'Ewan' is {" + artistID1 + "}");
 //		System.out.println("Result from adding artist 'Someone' is {" + artistID2 + "}");
 //		System.out.println("Result from adding artist 'Ewan' is {" + artistID3 + "}");
 //		System.out.println("Result from adding artist '' is {" + artistID4 + "}");
@@ -76,7 +76,7 @@ public class CLI {
 		List<String> acts1 = server.getActIDsForArtist("A1");
 		
 		for (String a : acts1) {
-			System.out.println(a);
+			System.out.println("A1:" + a);
 		}
 		
 		//------------schedulePerformance()-------------

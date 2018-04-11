@@ -300,9 +300,10 @@ public class TBSServerImpl implements TBSServer {
 		return false;
 	}
 	
-//	public boolean checkExists(String ID, List<?> list) {
-//		for (<?> i : list) {
-//			if (ID.equals(t[1])) {
+//	public boolean checkExists(String ID, List<? extends Object> list) {
+//		for (int i = 0; i < list.size(); i++) {
+//			listItem = list.get(i);
+//			if (ID.equals(listItem.getID())) {
 //				return true;
 //			}
 //		}
