@@ -15,7 +15,11 @@ public class Theatre {
 		_dimensions = dimensions;
 		_area = area;
 		_seats = new boolean[dimensions][dimensions];
-		Arrays.fill(_seats, true);
+		for (int row = 0; row < _seats.length; row++) {
+			for (int col = 0; col < _seats.length; col++) {
+				_seats[row][col] = true;
+			}
+		}
 	}
 	
 	public boolean[][] getSeats(String theatreID) {
