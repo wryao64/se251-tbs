@@ -99,7 +99,7 @@ public class CLI {
 		}
 		
 		//--------------issueTicket()------------------
-		String ticket1 = server.issueTicket("P1", 3, 5);
+		String ticket1 = server.issueTicket(performanceID1, 1, 1);
 		
 		System.out.println(ticket1);
 		

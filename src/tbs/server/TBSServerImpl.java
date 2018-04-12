@@ -241,8 +241,12 @@ public class TBSServerImpl implements TBSServer {
 		// insert seat error checking
 		// will probably need to call seatsAvailable
 		
-		Ticket ticket = new Ticket("P1", 2, 2);
+		Ticket ticket = new Ticket(performanceID, rowNumber, seatNumber);
 		ticketList.add(ticket);
+		
+		// set it to unavailable in the performance seats
+		Performance thisPerf = findPerformance(performanceID);
+		thisPerf.seatSold(rowNumber, seatNumber);
 		
 		return ticket.getID();
 	}
