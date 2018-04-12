@@ -26,7 +26,14 @@ public class Performance {
 	}
 	
 	public void setSeats(Theatre theatre) {
-		_seats = theatre.getSeats();
+		int dimension = theatre.getDimensions();
+		_seats = new boolean[dimension][dimension];
+		for (int row = 0; row < _seats.length; row++) {
+			for (int seatPos = 0; seatPos < _seats.length; seatPos++) {
+				// all seats are free (true)
+				_seats[row][seatPos] = true;
+			}
+		}
 	}
 	
 	public String getID() {
@@ -49,6 +56,22 @@ public class Performance {
 		}
 		
 		return availableSeatList;
+	}
+	
+	public boolean checkIfSeatExists(int rowNumber, int seatNumber) {
+		if ((rowNumber - 1) >= _seats.length || (seatNumber - 1) >= _seats.length) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public boolean checkIfSeatIsSold(int rowNumber, int seatNumber) {
+		if (_seats[rowNumber - 1][seatNumber - 1] == false) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public void seatSold(int rowNumber, int seatNumber) {

@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 
 public class TBSServerImpl implements TBSServer {
 	//private List<String[]> theatreList = new Vector<String[]>();
@@ -141,8 +143,25 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> getTicketIDsForPerformance(String performanceID) {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> ticketsForPerformance = new Vector<String>();
+		
+		if (performanceID.equals("")) {
+			ticketsForPerformance.add("ERROR missing performance ID");
+			return ticketsForPerformance;
+		}
+		
+		if (!checkPerformanceExists(performanceID)) {
+			ticketsForPerformance.add("ERROR performance does not exist");
+			return ticketsForPerformance;
+		}
+		
+		for (Ticket t : ticketList) {
+			if (t.getPerformanceID().equals(performanceID)) {
+				ticketsForPerformance.add(t.getID());
+			}
+		}
+		
+		return ticketsForPerformance;
 	}
 
 	public String addArtist(String name) {
@@ -221,9 +240,14 @@ public class TBSServerImpl implements TBSServer {
 		} else if (!checkTheatreExists(theatreID)) {
 			return "ERROR theatre does not exist";
 		}
-		// INCLUDE ERROR CHECKING FOR FORMAT OF OTHER PARAMETERS
 		
-		// ASSIGN PRICES TO SEATS
+		if (!checkTimeFormat(startTimeStr)) {
+			return "ERROR time format is invalid";
+		}
+		
+		if (!checkPriceFormat(premiumPriceStr) || !checkPriceFormat(cheapSeatsStr)) {
+			return "ERROR price format is invalid";
+		}
 		
 		Performance performance = new Performance(actID, theatreID, startTimeStr, premiumPriceStr, cheapSeatsStr);
 		Theatre perfTheatre = findTheatre(theatreID);
@@ -235,18 +259,24 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public String issueTicket(String performanceID, int rowNumber, int seatNumber) {
-		// error when performance ID or seat doesn't exist, or seat is taken
 		if (!checkPerformanceExists(performanceID)) {
 			return "ERROR performance does not exist";
 		}
-		// insert seat error checking
-		// will probably need to call seatsAvailable
+		
+		Performance thisPerf = findPerformance(performanceID);
+		
+		if (!thisPerf.checkIfSeatExists(rowNumber, seatNumber)) {
+			return "ERROR seat does not exist";
+		}
+
+		if (thisPerf.checkIfSeatIsSold(rowNumber, seatNumber)) {
+			return "ERROR seat is taken";
+		}
 		
 		Ticket ticket = new Ticket(performanceID, rowNumber, seatNumber);
 		ticketList.add(ticket);
 		
-		// set it to unavailable in the performance seats
-		Performance thisPerf = findPerformance(performanceID);
+		// sets seat to be taken
 		thisPerf.seatSold(rowNumber, seatNumber);
 		
 		return ticket.getID();
@@ -280,12 +310,6 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> dump() {
-		// prints all artists' IDs
-		if (artistList.size() != 0) {
-			for (Artist a : artistList) {
-				System.out.println(a.getName());
-			}
-		}
 		return null;
 	}
 	
@@ -360,5 +384,28 @@ public class TBSServerImpl implements TBSServer {
 		return null;
 	}
 	
+	public boolean checkPriceFormat(String price) {
+		for (int i = 0; i < price.length(); i++) {
+			if (i == 0) {
+				if (price.charAt(i) != '$') {
+					return false;
+				}
+			} else {
+				if (!Character.isDigit(price.charAt(i))) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
 	
+	public boolean checkTimeFormat(String time) {
+		try {
+			LocalDateTime.parse(time);
+			return true;
+		} catch (DateTimeParseException e) {
+			return false;
+		}
+	}
 }

@@ -1,6 +1,7 @@
 package tbs.client;
 
 import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import tbs.server.TBSServer;
@@ -80,8 +81,9 @@ public class CLI {
 		}
 		
 		//------------schedulePerformance()-------------
+		// LocalDateTime.now() - to get time now
 		String performanceID1 = server.schedulePerformance("ACT1", "T1", 
-				"2018-03-31T11:00", "$10", "$5");
+				"2018-04-01T11:00", "$10", "$5");
 		String performanceID2 = server.schedulePerformance("ACT2", "T1", 
 				"2018-04-01T11:00", "$10", "$5");
 		String performanceID3 = server.schedulePerformance("ACT1", "T1", 
@@ -100,10 +102,10 @@ public class CLI {
 		
 		//--------------issueTicket()------------------
 		String ticket1 = server.issueTicket(performanceID1, 1, 1);
-		String ticket2 = server.issueTicket(performanceID1, 5, 3);
-		String ticket3 = server.issueTicket(performanceID1, 2, 1);
-		String ticket4 = server.issueTicket(performanceID1, 1, 2);
-		String ticket5 = server.issueTicket(performanceID1, 6, 5);
+//		String ticket2 = server.issueTicket(performanceID1, 5, 3);
+//		String ticket3 = server.issueTicket(performanceID1, 2, 1);
+//		String ticket4 = server.issueTicket(performanceID1, 1, 2);
+//		String ticket5 = server.issueTicket(performanceID1, 5, 5);
 		
 		String ticket6 = server.issueTicket(performanceID3, 1, 3);
 		String ticket7 = server.issueTicket(performanceID3, 4, 2);
@@ -114,7 +116,7 @@ public class CLI {
 		//--------------seatsAvailable()------------
 		List<String> seatList = server.seatsAvailable(performanceID1);
 		
-		//System.out.println(seatList);
+		System.out.println(seatList);
 		
 		//--------------salesReport()------------
 		List<String> salesReport = server.salesReport(actID1);
@@ -122,7 +124,7 @@ public class CLI {
 		System.out.println(salesReport);
 	}
 }
-
+//
 //package tbs.client;
 //
 //import java.util.List;
@@ -196,29 +198,29 @@ public class CLI {
 //		System.out.print("Expected: ERROR: Artist not found \nGot     : " + ActIDs3 + "\n-=-=-=-\n");
 //		
 //		// -=-=-=-=-=-=-=-=-=- // schedulePerformance // -=-=-=-=-=-=-=-=-=- //
-//		String PerfID1 = server.schedulePerformance(Act1ID, "T1", "1999-05-13T11:27", "10", "20");
+//		String PerfID1 = server.schedulePerformance(Act1ID, "T1", "1999-05-13T11:27", "$20", "$10");
 //		System.out.print("Expected: an ID \nGot     : " + PerfID1 + "\n-=-=-=-\n");
-//		String PerfID2 = server.schedulePerformance(Act1ID, "T1", "2000-05-13T01:27", "15", "25");
+//		String PerfID2 = server.schedulePerformance(Act1ID, "T1", "2000-05-13T01:27", "$25", "$15");
 //		System.out.print("Expected: an ID \nGot     : " + PerfID2 + "\n-=-=-=-\n");
-//		String PerfID3 = server.schedulePerformance(Act3ID, "T2", "2010-07-13T15:27", "15", "25");
+//		String PerfID3 = server.schedulePerformance(Act3ID, "T2", "2010-07-13T15:27", "$25", "$15");
 //		System.out.print("Expected: an ID \nGot     : " + PerfID3 + "\n-=-=-=-\n");
 //		
 //		// Testing with invalid actID
-//		String PerfID4 = server.schedulePerformance("invaled", "T2", "2010-07-13T15:27", "15", "25");
+//		String PerfID4 = server.schedulePerformance("invaled", "T2", "2010-07-13T15:27", "$25", "$15");
 //		System.out.print("Expected: ERROR: Invalid actID \nGot     : " + PerfID4 + "\n-=-=-=-\n");
 //		
 //		// Testing with invalid theatre ID
-//		String PerfID5 = server.schedulePerformance(Act3ID, "Invalid", "2010-07-13T15:27", "15", "25");
+//		String PerfID5 = server.schedulePerformance(Act3ID, "Invalid", "2010-07-13T15:27", "$25", "$15");
 //		System.out.print("Expected: ERROR: Invalid TheatreID \nGot     : " + PerfID5 + "\n-=-=-=-\n");
 //		
 //		// Testing with non ISO time
-//		String PerfID6 = server.schedulePerformance(Act3ID, "T2", "2010-07-13-54:54", "15", "25");
+//		String PerfID6 = server.schedulePerformance(Act3ID, "T2", "2010-07-13-54:54", "$25", "$15");
 //		System.out.print("Expected: ERROR: Time format not ISO8601 \nGot     : " + PerfID6 + "\n-=-=-=-\n");
 //		
 //		// Testing with invalid prices
-//		String PerfID7 = server.schedulePerformance(Act3ID, "T2", "2010-07-13T15:27", "-15", "25");
+//		String PerfID7 = server.schedulePerformance(Act3ID, "T2", "2010-07-13T15:27", "$-15", "$25");
 //		System.out.print("Expected: ERROR: Prices are invalid \nGot     : " + PerfID7 + "\n-=-=-=-\n");
-//		String PerfID8 = server.schedulePerformance(Act3ID, "T2", "2010-07-13T15:27", "xd", "25");
+//		String PerfID8 = server.schedulePerformance(Act3ID, "T2", "2010-07-13T15:27", "$xd", "$25");
 //		System.out.print("Expected: ERROR: Prices are invalid \nGot     : " + PerfID8 + "\n-=-=-=-\n");
 //		
 //		// -=-=-=-=-=-=-=-=-=- // issueTicket // -=-=-=-=-=-=-=-=-=- //
@@ -234,9 +236,9 @@ public class CLI {
 //		System.out.print("Expected: ERROR: Seat is booked \nGot     : " + TicketID4 + "\n-=-=-=-\n");
 //		
 //		// Trying to book a ticket for a seat out of bounds
-////		String TicketID5 = server.issueTicket(PerfID1, 4, 500);
-////		System.out.print("Expected: ERROR: Seat does not exist \nGot     : " + TicketID5 + "\n-=-=-=-\n");
-////		
+//		String TicketID5 = server.issueTicket(PerfID1, 4, 500);
+//		System.out.print("Expected: ERROR: Seat does not exist \nGot     : " + TicketID5 + "\n-=-=-=-\n");
+//		
 //		// -=-=-=-=-=-=-=-=-=- // salesReport // -=-=-=-=-=-=-=-=-=- //
 //		List<String> Sales1 = server.salesReport(Act1ID);
 //		System.out.println(Sales1);

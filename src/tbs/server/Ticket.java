@@ -18,4 +18,8 @@ public class Ticket {
 	public String getID() {
 		return _ticketID;
 	}
+	
+	public String getPerformanceID() {
+		return _performanceID;
+	}
 }
