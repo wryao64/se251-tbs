@@ -34,7 +34,6 @@ public class CLI {
 //		for (String t : theatreIDs) {
 //			System.out.println(t);
 //		}
-//		server.dump();
 
 		//-------------addArtist()--------------------
 		String artistID1 = server.addArtist("Ewan");

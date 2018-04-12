@@ -2,6 +2,8 @@ package tbs.server;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.Vector;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -11,8 +13,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
 public class TBSServerImpl implements TBSServer {
-	//private List<String[]> theatreList = new Vector<String[]>();
-	private List<Theatre> theatreList = new Vector<Theatre>();
+	// Theatre ID at index 1
+	// Theatre dimension at index 2
+	// Theatre area at index 3
+	private static final int T_ID_IND = 1;
+	private static final int T_DIM_IND = 2;
+	private static final int T_AREA_IND = 3;
+	
+	private TreeSet<String> theatreIDList = new TreeSet<String>();
+	private TreeMap<String, Integer> theatreDimensionList = new TreeMap<String, Integer>();
+	private TreeMap<String, Integer> theatreAreaList = new TreeMap<String, Integer>();
+	
 	private List<Artist> artistList = new Vector<Artist>();
 	private List<Act> actList = new Vector<Act>();
 	private List<Performance> performanceList = new Vector<Performance>();
@@ -25,26 +36,22 @@ public class TBSServerImpl implements TBSServer {
 		try {
 			BufferedReader data = new BufferedReader(new FileReader(path));
 			
-			// read & store theatre data from CSV file for theatre list
-//			while ((line = data.readLine()) != null) {
-//				String[] theatre = line.split(separator);
-//				// Theatre ID at index 1
-//				// Theatre dimension at index 2
-//				// Theatre area at index 3
-//				theatreList.add(theatre);
-//			}
-			
-			// read & store theatre data from CSV file (for theatre class)
+			// read & store theatre data from CSV file
 			while ((line = data.readLine()) != null) {
 				String[] theatreData = line.split(separator);
-				// Theatre ID at index 1
-				// Theatre dimension at index 2
-				// Theatre area at index 3
-				String ID = theatreData[1];
-				int dimensions = Integer.parseInt(theatreData[2]);
-				int area = Integer.parseInt(theatreData[3]);
-				Theatre theatre = new Theatre(ID, dimensions, area);
-				theatreList.add(theatre);
+				
+				try {
+					String theatreID = theatreData[T_ID_IND];
+					Integer dimensions = Integer.valueOf(theatreData[T_DIM_IND]);
+					String strArea = theatreData[T_AREA_IND];
+					strArea = strArea.substring(0, strArea.length() - 1);
+					Integer area = Integer.valueOf(strArea);
+					theatreIDList.add(theatreID);
+					theatreDimensionList.put(theatreID, dimensions);
+					theatreAreaList.put(theatreID, area);
+				} catch (NumberFormatException e) {
+					return "ERROR invalid dimension or area data";
+				}
 			}
 			
 			return "";
@@ -58,15 +65,9 @@ public class TBSServerImpl implements TBSServer {
 	public List<String> getTheatreIDs() {
 		List<String> theatreIDs = new Vector<String>();
 		
-		// stores theatre IDs
-//		for (String[] t : theatreList) {
-//			theatreIDs.add(t[1]);
-//		}
-		for (Theatre t : theatreList) {
-			theatreIDs.add(t.getID());
+		for (String t : theatreIDList) {
+			theatreIDs.add(t);
 		}
-		
-		Collections.sort(theatreIDs);
 		
 		return theatreIDs;
 	}
