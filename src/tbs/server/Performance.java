@@ -38,6 +38,14 @@ public class Performance {
 	public List<String> checkAvailableSeats() {
 		List<String> availableSeatList = new Vector<String>();
 		
+		for (int row = 0; row < _seats.length; row++) {
+			for (int seatPos = 0; seatPos < _seats.length; seatPos++) {
+				if (_seats[row][seatPos] = true) {
+					availableSeatList.add((row + 1) + "\t" + (seatPos + 1));
+				}
+			}
+		}
+		
 		return availableSeatList;
 	}
 }

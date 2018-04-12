@@ -16,8 +16,8 @@ public class Theatre {
 	private void initialiseSeats() {
 		_seats = new boolean[_dimensions][_dimensions];
 		for (int row = 0; row < _seats.length; row++) {
-			for (int col = 0; col < _seats.length; col++) {
-				_seats[row][col] = true;
+			for (int seatPos = 0; seatPos < _seats.length; seatPos++) {
+				_seats[row][seatPos] = true;
 			}
 		}
 	}

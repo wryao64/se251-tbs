@@ -100,5 +100,10 @@ public class CLI {
 		
 		//--------------
 		
+		
+		//--------------seatsAvailable()------------
+		List<String> seatList = server.seatsAvailable(performanceID1);
+		
+		System.out.println(seatList);
 	}
 }
