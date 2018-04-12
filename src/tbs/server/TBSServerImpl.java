@@ -23,7 +23,7 @@ public class TBSServerImpl implements TBSServer {
 		try {
 			BufferedReader data = new BufferedReader(new FileReader(path));
 			
-			// read & store theatre data from CSV file
+			// read & store theatre data from CSV file for theatre list
 //			while ((line = data.readLine()) != null) {
 //				String[] theatre = line.split(separator);
 //				// Theatre ID at index 1
@@ -32,14 +32,15 @@ public class TBSServerImpl implements TBSServer {
 //				theatreList.add(theatre);
 //			}
 			
+			// read & store theatre data from CSV file (for theatre class)
 			while ((line = data.readLine()) != null) {
 				String[] theatreData = line.split(separator);
-				String ID = theatreData[1];
-				int dimensions = Integer.parseInt(theatreData[2]);
-				int area = Integer.parseInt(theatreData[3]);
 				// Theatre ID at index 1
 				// Theatre dimension at index 2
 				// Theatre area at index 3
+				String ID = theatreData[1];
+				int dimensions = Integer.parseInt(theatreData[2]);
+				int area = Integer.parseInt(theatreData[3]);
 				Theatre theatre = new Theatre(ID, dimensions, area);
 				theatreList.add(theatre);
 			}
@@ -118,25 +119,25 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> getPeformanceIDsForAct(String actID) {
-		List<String> performanceForActs = new Vector<String>();
+		List<String> performancesForAct = new Vector<String>();
 		
 		if (actID.equals("")) {
-			performanceForActs.add("ERROR missing act ID");
-			return performanceForActs;
+			performancesForAct.add("ERROR missing act ID");
+			return performancesForAct;
 		}
 		
 		if (!checkActExists(actID)) {
-			performanceForActs.add("ERROR act does not exist");
-			return performanceForActs;
+			performancesForAct.add("ERROR act does not exist");
+			return performancesForAct;
 		} else {
 			for (Performance p : performanceList) { 
 				if (actID.equals(p.getActID())) { 
-					performanceForActs.add(p.getID()); 
+					performancesForAct.add(p.getID()); 
 				} 
 			} 
 		}
 		
-		return performanceForActs;
+		return performancesForAct;
 	}
 
 	public List<String> getTicketIDsForPerformance(String performanceID) {
@@ -261,8 +262,21 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public List<String> salesReport(String actID) {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> salesReport = new Vector<String>();
+		
+		if (!checkActExists(actID)) {
+			salesReport.add("ERROR act does not exist");
+			return salesReport;
+		}
+		
+		List<String> performanceIDs = getPeformanceIDsForAct(actID);
+		
+		for (String p : performanceIDs) {
+			Performance performance = findPerformance(p);
+			salesReport.add(performance.performanceDetails());
+		}
+		
+		return salesReport;
 	}
 
 	public List<String> dump() {

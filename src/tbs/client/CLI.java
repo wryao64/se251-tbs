@@ -95,17 +95,30 @@ public class CLI {
 		List<String> performances1 = server.getPeformanceIDsForAct("ACT1");
 		
 		for (String p : performances1) { 
-			System.out.println(p); 
+			System.out.println(p);
 		}
 		
 		//--------------issueTicket()------------------
 		String ticket1 = server.issueTicket(performanceID1, 1, 1);
+		String ticket2 = server.issueTicket(performanceID1, 5, 3);
+		String ticket3 = server.issueTicket(performanceID1, 2, 1);
+		String ticket4 = server.issueTicket(performanceID1, 1, 2);
+		String ticket5 = server.issueTicket(performanceID1, 6, 5);
+		
+		String ticket6 = server.issueTicket(performanceID3, 1, 3);
+		String ticket7 = server.issueTicket(performanceID3, 4, 2);
+		String ticket8 = server.issueTicket(performanceID3, 5, 1);
 		
 		System.out.println(ticket1);
 		
 		//--------------seatsAvailable()------------
 		List<String> seatList = server.seatsAvailable(performanceID1);
 		
-		System.out.println(seatList);
+		//System.out.println(seatList);
+		
+		//--------------salesReport()------------
+		List<String> salesReport = server.salesReport(actID1);
+		
+		System.out.println(salesReport);
 	}
 }
