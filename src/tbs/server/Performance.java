@@ -21,7 +21,10 @@ public class Performance {
 		_startTimeStr = startTimeStr;
 		_premiumPriceStr = premiumPriceStr;
 		_cheapSeatsStr = cheapSeatsStr;
-		//_seats = _theatreID.getSeats(theatreID);
+	}
+	
+	public void setSeats(Theatre theatre) {
+		_seats = theatre.getSeats();
 	}
 	
 	public String getID() {

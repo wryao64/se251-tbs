@@ -225,9 +225,19 @@ public class TBSServerImpl implements TBSServer {
 		// ASSIGN PRICES TO SEATS
 		
 		Performance performance = new Performance(actID, theatreID, startTimeStr, premiumPriceStr, cheapSeatsStr);
-		performanceList.add(performance);
 		
-		// CREATE SEATING ARRAY 
+		// sets the seat array for each performance
+//		for (Theatre t : theatreList) {
+//			if (theatreID.equals(t.getID())) {
+//				Theatre perfTheatre = t;
+//				performance.setSeats(perfTheatre);
+//				break;
+//			}
+//		}
+		
+		performance.setSeats(perfTheatre);
+		
+		performanceList.add(performance);
 		
 		return performance.getID();
 	}
@@ -245,7 +255,7 @@ public class TBSServerImpl implements TBSServer {
 		List<String> availableSeatList = new Vector<String>();
 		//using performanceID, get theatreID
 		for (Performance p : performanceList) {
-			if (p.equals(performanceID)) {
+			if (p.getID().equals(performanceID)) {
 				Performance performance = p;
 				availableSeatList = performance.checkAvailableSeats();
 				break;
@@ -310,4 +320,18 @@ public class TBSServerImpl implements TBSServer {
 //		
 //		return false;
 //	}
+	
+	public Theatre findTheatre(String theatreID) {
+		for (Theatre t : theatreList) {
+			if (t.getID().equals(theatreID)) {
+				return t;
+			}
+		}
+		
+		return null;
+	}
+	
+	
+	
+	
 }
