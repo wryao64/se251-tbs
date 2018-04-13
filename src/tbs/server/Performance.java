@@ -36,7 +36,7 @@ public class Performance {
 		}
 	}
 	
-	public String getID() {
+	public String getPerformanceID() {
 		return _performanceID;
 	}
 	
@@ -79,7 +79,6 @@ public class Performance {
 		_seats[rowNumber - 1][seatNumber - 1] = false;
 		
 		double premSeatRows = Math.floor(_seats.length / 2);
-		
 		if (rowNumber <= premSeatRows) {
 			_premTicketsSold++;
 		} else {
@@ -88,47 +87,44 @@ public class Performance {
 	}
 	
 	public String calculatePriceOfTicketsSold() {
-		String price = "$";
+		String dollar = "$";
 		
 		int premiumPrice = Integer.parseInt(_premiumPriceStr.substring(1));
 		int cheapPrice = Integer.parseInt(_cheapSeatsStr.substring(1));
 		
 		int totalPrice = _premTicketsSold * premiumPrice + _cheapTicketsSold * cheapPrice;
 		
-		return price + totalPrice;
+		return dollar + totalPrice;
 	}
 	
 	public String performanceDetails() {
 		int ticketsSold = _premTicketsSold + _cheapTicketsSold;
-		
 		String totalPrice = calculatePriceOfTicketsSold();
 
 		return _performanceID + "\t" + _startTimeStr + "\t" + ticketsSold + "\t" + totalPrice;
 	}
 	
-	public Ticket newTicket(String ticketID, String performanceID, int rowNumber, int seatNumber) {
-		return new Ticket(ticketID, performanceID, rowNumber, seatNumber);
+	public Ticket newTicket(String ticketID, int rowNumber, int seatNumber) {
+		return new Ticket(ticketID, rowNumber, seatNumber);
 	}
 	
 	public class Ticket {
 		private String _ticketID;
 		private int _rowNumber;
 		private int _seatNumber;
-		private String _performanceID;
 		
-		public Ticket(String ticketID, String performanceID, int rowNumber, int seatNumber) {
+		public Ticket(String ticketID, int rowNumber, int seatNumber) {
 			_ticketID = ticketID;
 			_rowNumber = rowNumber;
 			_seatNumber = seatNumber;
-			_performanceID = performanceID;
-		}
-		
-		public String getID() {
-			return _ticketID;
 		}
 		
 		public String getPerformanceID() {
 			return _performanceID;
+		}
+		
+		public String getTicketID() {
+			return _ticketID;
 		}
 	}
 }

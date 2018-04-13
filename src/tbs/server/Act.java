@@ -14,7 +14,7 @@ public class Act {
 		_minutesDuration = minutesDuration;
 	}
 	
-	public String getID() {
+	public String getActID() {
 		return _actID;
 	}
 	

@@ -119,7 +119,7 @@ public class TBSServerImpl implements TBSServer {
 			Collection<Act> acts = actMap.values();
 			for (Act a : acts) {
 				if (artistID.equals(a.getArtistID())) { 
-					actsForArtist.add(a.getID()); 
+					actsForArtist.add(a.getActID()); 
 				}
 			}
 		}
@@ -140,7 +140,7 @@ public class TBSServerImpl implements TBSServer {
 			Collection<Performance> performances = performanceMap.values();
 			for (Performance p : performances) { 
 				if (actID.equals(p.getActID())) { 
-					performancesForAct.add(p.getID()); 
+					performancesForAct.add(p.getPerformanceID()); 
 				} 
 			}
 		}
@@ -158,10 +158,12 @@ public class TBSServerImpl implements TBSServer {
 			ticketsForPerformance.add("ERROR performance does not exist");
 			return ticketsForPerformance;
 		} else {
+			Performance thisPerf = performanceMap.get(performanceID);
 			Collection<Ticket> tickets = ticketMap.values();
 			for (Ticket t : tickets) {
-				if (t.getPerformanceID().equals(performanceID)) {
-					ticketsForPerformance.add(t.getID());
+				//String curTicketPerfID = thisPerf.t.
+				if (performanceID.equals(t.getPerformanceID())) {
+					ticketsForPerformance.add(t.getTicketID());
 				}
 			}
 		}
@@ -200,7 +202,7 @@ public class TBSServerImpl implements TBSServer {
 		}
 		
 		Act act = new Act(title, artistID, minutesDuration);
-		String actID = act.getID();
+		String actID = act.getActID();
 		actMap.put(actID, act);
 		
 		return actID;
@@ -217,10 +219,10 @@ public class TBSServerImpl implements TBSServer {
 		
 		Integer theatreDim = theatreDimensionMap.get(theatreID);
 		Performance performance = new Performance(actID, theatreID, theatreDim, startTimeStr, premiumPriceStr, cheapSeatsStr);
-		String performanceID = performance.getID();
+		String performanceID = performance.getPerformanceID();
 		performanceMap.put(performanceID, performance);
 		
-		return performance.getID();
+		return performanceID;
 	}
 
 	public String issueTicket(String performanceID, int rowNumber, int seatNumber) {
@@ -238,13 +240,13 @@ public class TBSServerImpl implements TBSServer {
 		}
 		
 		String ticketID = TICKET_ID_BASE + (ticketMap.size() + 1);
-		Performance.Ticket ticket = thisPerf.newTicket(ticketID, performanceID, rowNumber, seatNumber);
+		Ticket ticket = thisPerf.newTicket(ticketID, rowNumber, seatNumber);
 		ticketMap.put(ticketID, ticket);
 		
 		// sets seat to be sold
 		thisPerf.seatSold(rowNumber, seatNumber);
 		
-		return ticket.getID();
+		return ticketID;
 	}
 
 	public List<String> seatsAvailable(String performanceID) {
@@ -259,15 +261,14 @@ public class TBSServerImpl implements TBSServer {
 	public List<String> salesReport(String actID) {
 		List<String> salesReport = new Vector<String>();
 		
-		if (!checkActExists(actID)) {
+		if (!actMap.containsKey(actID)) {
 			salesReport.add("ERROR act does not exist");
 			return salesReport;
 		}
 		
 		List<String> performanceIDs = getPeformanceIDsForAct(actID);
-		
 		for (String p : performanceIDs) {
-			Performance performance = findPerformance(p);
+			Performance performance = performanceMap.get(p);
 			salesReport.add(performance.performanceDetails());
 		}
 		
