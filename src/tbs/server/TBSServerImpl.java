@@ -24,6 +24,8 @@ public class TBSServerImpl implements TBSServer {
 	private static final String ARTIST_ID_BASE = "A";
 	private static final String TICKET_ID_BASE = "TKT";
 	
+	Checker checker = new Checker();
+	
 	private TreeSet<String> theatreIDSet = new TreeSet<String>();
 	private TreeMap<String, Integer> theatreDimensionMap = new TreeMap<String, Integer>();
 	private TreeMap<String, Integer> theatreAreaMap = new TreeMap<String, Integer>();
@@ -36,9 +38,6 @@ public class TBSServerImpl implements TBSServer {
 	private TreeMap<String, Performance> performanceMap = new TreeMap<String, Performance>();
 	// key: ticketID, value: Ticket object
 	private TreeMap<String, Ticket> ticketMap = new TreeMap<String, Ticket>();
-	
-	Checker checker = new Checker(theatreIDSet, theatreDimensionMap, theatreAreaMap,
-			artistMap, actMap, performanceMap, ticketMap);
 	
 	public String initialise(String path) {
 		String line = "";
@@ -176,23 +175,18 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public String addAct(String title, String artistID, int minutesDuration) {
-		if (title.equals("") || artistID.equals("")) {
-			return "ERROR empty data";
-		}
-		if (minutesDuration <= 0) {
-			return "ERROR act duration is invalid";
-		}
+		// check for errors (missing/non-existing/invalid data)
+		String errorMsg = checker.checkParamsForAct(title, artistID, minutesDuration, artistMap);
 		
-		// checks if artist exists
-		if (!artistMap.containsKey(artistID)) {
-			return "ERROR artist does not exist";
-		}
-		
-		Act act = new Act(title, artistID, minutesDuration);
-		String actID = act.getActID();
-		actMap.put(actID, act);
-		
-		return actID;
+		if (errorMsg != "") {
+			return errorMsg;
+		} else {
+			Act act = new Act(title, artistID, minutesDuration);
+			String actID = act.getActID();
+			actMap.put(actID, act);
+			
+			return actID;
+		}		
 	}
 
 	public String schedulePerformance(String actID, String theatreID, String startTimeStr,
@@ -200,40 +194,37 @@ public class TBSServerImpl implements TBSServer {
 		// checks for errors (missing or non-existing data & formatting)
 		String errorMsg = checker.checkParamsForPerformance(actID, theatreID, startTimeStr, 
 				premiumPriceStr, cheapSeatsStr, actMap, theatreIDSet);
+		
 		if (!errorMsg.equals("")) {
 			return errorMsg;
+		} else {
+			Integer theatreDim = theatreDimensionMap.get(theatreID);
+			Performance performance = new Performance(actID, theatreID, theatreDim, startTimeStr, premiumPriceStr, cheapSeatsStr);
+			String performanceID = performance.getPerformanceID();
+			performanceMap.put(performanceID, performance);
+			
+			return performanceID;
 		}
-		
-		Integer theatreDim = theatreDimensionMap.get(theatreID);
-		Performance performance = new Performance(actID, theatreID, theatreDim, startTimeStr, premiumPriceStr, cheapSeatsStr);
-		String performanceID = performance.getPerformanceID();
-		performanceMap.put(performanceID, performance);
-		
-		return performanceID;
 	}
 
 	public String issueTicket(String performanceID, int rowNumber, int seatNumber) {
-		// checks if performance exists
-		if (!performanceMap.containsKey(performanceID)) {
-			return "ERROR performance does not exist";
-		}
-		
 		Performance thisPerf = performanceMap.get(performanceID);
 		
-		if (!thisPerf.checkIfSeatExists(rowNumber, seatNumber)) {
-			return "ERROR seat does not exist";
-		} else if (!thisPerf.checkIfSeatIsAvailable(rowNumber, seatNumber)) {
-			return "ERROR seat is taken";
+		String errorMsg = checker.checkParamsForTicket(performanceID, rowNumber, seatNumber, 
+				performanceMap, thisPerf);
+		
+		if (errorMsg != "") {
+			return errorMsg;
+		} else {
+			String ticketID = TICKET_ID_BASE + (ticketMap.size() + 1);
+			Ticket ticket = thisPerf.newTicket(ticketID, rowNumber, seatNumber);
+			ticketMap.put(ticketID, ticket);
+			
+			// sets seat to be unavailable
+			thisPerf.seatSold(rowNumber, seatNumber);
+			
+			return ticketID;
 		}
-		
-		String ticketID = TICKET_ID_BASE + (ticketMap.size() + 1);
-		Ticket ticket = thisPerf.newTicket(ticketID, rowNumber, seatNumber);
-		ticketMap.put(ticketID, ticket);
-		
-		// sets seat to be sold
-		thisPerf.seatSold(rowNumber, seatNumber);
-		
-		return ticketID;
 	}
 
 	public List<String> seatsAvailable(String performanceID) {

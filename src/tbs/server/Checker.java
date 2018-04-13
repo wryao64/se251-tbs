@@ -81,6 +81,21 @@ public class Checker {
 		}
 	}
 	
+	public String checkParamsForAct(String title, String artistID, int minutesDuration, 
+			TreeMap<String, String> artistMap) {
+		String artistErrorMsg = this.checkID(artistID, artistMap);
+		
+		if (artistErrorMsg != "") {
+			return artistErrorMsg;
+		} else if (title.equals("")) {
+			return "ERROR empty title";
+		} else if (minutesDuration <= 0) {
+			return "ERROR act duration is invalid";
+		} else {
+			return "";
+		}
+	}
+	
 	public String checkParamsForPerformance(String actID, String theatreID, 
 			String startTimeStr, String premiumPriceStr, String cheapSeatsStr,
 			TreeMap<String, Act> actMap, TreeSet<String> theatreIDSet) {
@@ -97,6 +112,21 @@ public class Checker {
 			return timeErrorMsg;
 		} else if (priceErrorMsg != "") {
 			return priceErrorMsg;
+		} else {
+			return "";
+		}
+	}
+	
+	public String checkParamsForTicket(String performanceID, int rowNumber, int seatNumber,
+			TreeMap<String, Performance> performanceMap, Performance thisPerf) {
+		String perfErrorMsg = this.checkID(performanceID, performanceMap);
+		
+		if (perfErrorMsg != "") {
+			return perfErrorMsg;
+		} else if (!thisPerf.checkIfSeatExists(rowNumber, seatNumber)) {
+			return "ERROR seat does not exist";
+		} else if (!thisPerf.checkIfSeatIsAvailable(rowNumber, seatNumber)) {
+			return "ERROR seat is taken";
 		} else {
 			return "";
 		}
