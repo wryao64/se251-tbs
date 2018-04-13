@@ -1,8 +1,6 @@
 package tbs.server;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
@@ -15,8 +13,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 
 public class TBSServerImpl implements TBSServer {
 	// Theatre ID at index 1
@@ -40,6 +36,9 @@ public class TBSServerImpl implements TBSServer {
 	private TreeMap<String, Performance> performanceMap = new TreeMap<String, Performance>();
 	// key: ticketID, value: Ticket object
 	private TreeMap<String, Ticket> ticketMap = new TreeMap<String, Ticket>();
+	
+	Checker checker = new Checker(theatreIDSet, theatreDimensionMap, theatreAreaMap,
+			artistMap, actMap, performanceMap, ticketMap);
 	
 	public String initialise(String path) {
 		String line = "";
@@ -109,11 +108,9 @@ public class TBSServerImpl implements TBSServer {
 	public List<String> getActIDsForArtist(String artistID) {
 		List<String> actsForArtist = new Vector<String>();
 		
-		if (artistID.equals("")) {
-			actsForArtist.add("ERROR missing artist ID");
-			return actsForArtist;
-		} else if (!artistMap.containsKey(artistID)) {  // checks if artist exists
-			actsForArtist.add("ERROR artist does not exist");
+		String errorMsg = checker.checkID(artistID, artistMap);
+		if (errorMsg != "") {
+			actsForArtist.add(errorMsg);
 			return actsForArtist;
 		} else {
 			Collection<Act> acts = actMap.values();
@@ -130,11 +127,9 @@ public class TBSServerImpl implements TBSServer {
 	public List<String> getPeformanceIDsForAct(String actID) {
 		List<String> performancesForAct = new Vector<String>();
 		
-		if (actID.equals("")) {
-			performancesForAct.add("ERROR missing act ID");
-			return performancesForAct;
-		} else if (!actMap.containsKey(actID)) {  // checks if act exists
-			performancesForAct.add("ERROR act does not exist");
+		String errorMsg = checker.checkID(actID, actMap);
+		if (errorMsg != "") {
+			performancesForAct.add(errorMsg);
 			return performancesForAct;
 		} else {
 			Collection<Performance> performances = performanceMap.values();
@@ -151,17 +146,13 @@ public class TBSServerImpl implements TBSServer {
 	public List<String> getTicketIDsForPerformance(String performanceID) {
 		List<String> ticketsForPerformance = new Vector<String>();
 		
-		if (performanceID.equals("")) {
-			ticketsForPerformance.add("ERROR missing performance ID");
-			return ticketsForPerformance;
-		} else if (!performanceMap.containsKey(performanceID)) { // check if performance exists
-			ticketsForPerformance.add("ERROR performance does not exist");
+		String errorMsg = checker.checkID(performanceID, performanceMap);
+		if (errorMsg != "") {
+			ticketsForPerformance.add(errorMsg);
 			return ticketsForPerformance;
 		} else {
-			Performance thisPerf = performanceMap.get(performanceID);
 			Collection<Ticket> tickets = ticketMap.values();
 			for (Ticket t : tickets) {
-				//String curTicketPerfID = thisPerf.t.
 				if (performanceID.equals(t.getPerformanceID())) {
 					ticketsForPerformance.add(t.getTicketID());
 				}
@@ -172,20 +163,16 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public String addArtist(String name) {
-		if (name.equals("")) {
-			return "ERROR no name entered";
-		}
-		
 		name = name.trim();
 		
-		if (artistMap.containsValue(name) || artistMap.containsValue(name.toLowerCase())) {
-			return "ERROR artist already exists";
+		String errorMsg = checker.checkName(name, artistMap);
+		if (errorMsg != "") {
+			return errorMsg;
+		} else {
+			String artistID = ARTIST_ID_BASE + (artistMap.size() + 1);
+			artistMap.put(artistID, name);
+			return artistID;
 		}
-		
-		String artistID = ARTIST_ID_BASE + (artistMap.size() + 1);
-		artistMap.put(artistID, name);
-
-		return artistID;
 	}
 
 	public String addAct(String title, String artistID, int minutesDuration) {
@@ -211,8 +198,8 @@ public class TBSServerImpl implements TBSServer {
 	public String schedulePerformance(String actID, String theatreID, String startTimeStr,
 			String premiumPriceStr, String cheapSeatsStr) {
 		// checks for errors (missing or non-existing data & formatting)
-		String errorMsg = checkParamsForPerformance(actID, theatreID, startTimeStr, 
-				premiumPriceStr, cheapSeatsStr);
+		String errorMsg = checker.checkParamsForPerformance(actID, theatreID, startTimeStr, 
+				premiumPriceStr, cheapSeatsStr, actMap, theatreIDSet);
 		if (!errorMsg.equals("")) {
 			return errorMsg;
 		}
@@ -261,8 +248,9 @@ public class TBSServerImpl implements TBSServer {
 	public List<String> salesReport(String actID) {
 		List<String> salesReport = new Vector<String>();
 		
-		if (!actMap.containsKey(actID)) {
-			salesReport.add("ERROR act does not exist");
+		String errorMsg = checker.checkID(actID, actMap);
+		if (errorMsg != "") {
+			salesReport.add(errorMsg);
 			return salesReport;
 		}
 		
@@ -277,58 +265,5 @@ public class TBSServerImpl implements TBSServer {
 
 	public List<String> dump() {
 		return null;
-	}
-	
-	private boolean checkPriceFormat(String price) {
-		for (int i = 0; i < price.length(); i++) {
-			if (i == 0) {
-				if (price.charAt(i) != '$') {
-					return false;
-				}
-			} else {
-				if (!Character.isDigit(price.charAt(i))) {
-					return false;
-				}
-			}
-		}
-		
-		return true;
-	}
-	
-	private boolean checkTimeFormat(String time) {
-		try {
-			LocalDateTime.parse(time);
-			return true;
-		} catch (DateTimeParseException e) {
-			return false;
-		}
-	}
-	
-	private String checkParamsForPerformance(String actID, String theatreID, 
-			String startTimeStr, String premiumPriceStr, String cheapSeatsStr) {
-		if (actID.equals("") || theatreID.equals("")) {
-			return "ERROR missing ID";
-		} else if (startTimeStr.equals("")) {
-			return "ERROR missing start time";
-		} else if (premiumPriceStr.equals("") || cheapSeatsStr.equals("")) {
-			return "ERROR missing price data";
-		}
-
-		// checks if the act and theatre exists
-		if (!actMap.containsKey(actID)) {
-			return "ERROR act does not exist";
-		} else if (!theatreIDSet.contains(theatreID)) {
-			return "ERROR theatre does not exist";
-		}
-		
-		if (!checkTimeFormat(startTimeStr)) {
-			return "ERROR time format is invalid";
-		}
-		
-		if (!checkPriceFormat(premiumPriceStr) || !checkPriceFormat(cheapSeatsStr)) {
-			return "ERROR price format is invalid";
-		}
-		
-		return "";
 	}
 }
