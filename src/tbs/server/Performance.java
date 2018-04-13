@@ -15,7 +15,7 @@ public class Performance {
 	private int _premTicketsSold = 0;
 	private int _cheapTicketsSold = 0;
 	
-	public Performance(String actID, String theatreID, String startTimeStr, 
+	public Performance(String actID, String theatreID, Integer theatreDim, String startTimeStr, 
 			String premiumPriceStr, String cheapSeatsStr) {
 		_performanceID = "P" + ++performanceCount;
 		_actID = actID;
@@ -23,11 +23,11 @@ public class Performance {
 		_startTimeStr = startTimeStr;
 		_premiumPriceStr = premiumPriceStr;
 		_cheapSeatsStr = cheapSeatsStr;
+		_seats = new boolean[theatreDim][theatreDim];
+		this.setSeats();
 	}
 	
-	public void setSeats(Theatre theatre) {
-		int dimension = theatre.getDimensions();
-		_seats = new boolean[dimension][dimension];
+	private void setSeats() {
 		for (int row = 0; row < _seats.length; row++) {
 			for (int seatPos = 0; seatPos < _seats.length; seatPos++) {
 				// all seats are free (true)
@@ -44,7 +44,24 @@ public class Performance {
 		return _actID;
 	}
 	
-	public List<String> checkAvailableSeats() {
+	public boolean checkIfSeatExists(int rowNumber, int seatNumber) {
+		if ((rowNumber - 1) >= _seats.length || (rowNumber - 1) < 0 || 
+				(seatNumber - 1) >= _seats.length || (seatNumber - 1) < 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public boolean checkIfSeatIsAvailable(int rowNumber, int seatNumber) {
+		if (_seats[rowNumber - 1][seatNumber - 1] == false) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	public List<String> findAvailableSeats() {
 		List<String> availableSeatList = new Vector<String>();
 		
 		for (int row = 0; row < _seats.length; row++) {
@@ -56,23 +73,7 @@ public class Performance {
 		}
 		
 		return availableSeatList;
-	}
-	
-	public boolean checkIfSeatExists(int rowNumber, int seatNumber) {
-		if ((rowNumber - 1) >= _seats.length || (seatNumber - 1) >= _seats.length) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-	
-	public boolean checkIfSeatIsSold(int rowNumber, int seatNumber) {
-		if (_seats[rowNumber - 1][seatNumber - 1] == false) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+	}	
 	
 	public void seatSold(int rowNumber, int seatNumber) {
 		_seats[rowNumber - 1][seatNumber - 1] = false;
@@ -103,5 +104,31 @@ public class Performance {
 		String totalPrice = calculatePriceOfTicketsSold();
 
 		return _performanceID + "\t" + _startTimeStr + "\t" + ticketsSold + "\t" + totalPrice;
+	}
+	
+	public Ticket newTicket(String ticketID, String performanceID, int rowNumber, int seatNumber) {
+		return new Ticket(ticketID, performanceID, rowNumber, seatNumber);
+	}
+	
+	public class Ticket {
+		private String _ticketID;
+		private int _rowNumber;
+		private int _seatNumber;
+		private String _performanceID;
+		
+		public Ticket(String ticketID, String performanceID, int rowNumber, int seatNumber) {
+			_ticketID = ticketID;
+			_rowNumber = rowNumber;
+			_seatNumber = seatNumber;
+			_performanceID = performanceID;
+		}
+		
+		public String getID() {
+			return _ticketID;
+		}
+		
+		public String getPerformanceID() {
+			return _performanceID;
+		}
 	}
 }

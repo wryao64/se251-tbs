@@ -30,10 +30,8 @@ public class CLI {
 		
 		//-----------getTheatreIDs()-----------------------
 		List<String> theatreIDs = server.getTheatreIDs();
-		
-//		for (String t : theatreIDs) {
-//			System.out.println(t);
-//		}
+
+		System.out.println(theatreIDs);
 
 		//-------------addArtist()--------------------
 		String artistID1 = server.addArtist("Ewan");
@@ -43,41 +41,37 @@ public class CLI {
 		String artistID5 = server.addArtist("BTS");
 		
 		System.out.println("Result from adding artist 'Ewan' is {" + artistID1 + "}");
-//		System.out.println("Result from adding artist 'Someone' is {" + artistID2 + "}");
-//		System.out.println("Result from adding artist 'Ewan' is {" + artistID3 + "}");
-//		System.out.println("Result from adding artist '' is {" + artistID4 + "}");
-//		System.out.println("Result from adding artist 'BTS' is {" + artistID5 + "}");
-		
-//		server.dump();
+		System.out.println("Result from adding artist 'Someone' is {" + artistID2 + "}");
+		System.out.println("Result from adding artist 'Ewan' is {" + artistID3 + "}");
+		System.out.println("Result from adding artist '' is {" + artistID4 + "}");
+		System.out.println("Result from adding artist 'BTS' is {" + artistID5 + "}");
+
 		
 		//-----------getArtistIDs()--------------------------
 		List<String> artistIDs = server.getArtistIDs();
 		
-//		for (String a : artistIDs) {
-//			System.out.println(a);
-//		}
+		System.out.println(artistIDs);
 		
 		//-------------getArtistNames()--------------------------
 		List<String> artistNames = server.getArtistNames();
 		
-//		for (String a : artistNames) {
-//			System.out.println(a);
-//		}
+		System.out.println(artistNames);
 		
 		//------------addAct()-------------------------
 		String actID1 = server.addAct("Act 1", "A1", 5);
 		String actID2 = server.addAct("Act 2", "A2", 10);
 		String actID3 = server.addAct("The Show", "A1", 10);
 		
-//		System.out.println(actID1);
-//		System.out.println(actID2);
+		System.out.println(actID1);
+		System.out.println(actID2);
+		System.out.println(actID3);
 		
 		//------------getActIDsForArtist()---------------
 		List<String> acts1 = server.getActIDsForArtist("A1");
+//		List<String> acts2 = server.getActIDsForArtist("A2");
 		
-		for (String a : acts1) {
-			System.out.println("A1:" + a);
-		}
+		System.out.println(acts1);
+//		System.out.println(acts2);
 		
 		//------------schedulePerformance()-------------
 		// LocalDateTime.now() - to get time now
@@ -88,29 +82,37 @@ public class CLI {
 		String performanceID3 = server.schedulePerformance("ACT1", "T1", 
 				"2018-03-02T11:00", "$10", "$5");
 		
-//		System.out.println(performanceID1);
-//		System.out.println(performanceID2);
-//		System.out.println(performanceID3);
+		System.out.println(performanceID1);
+		System.out.println(performanceID2);
+		System.out.println(performanceID3);
 		
 		//-------------getPeformanceIDsForAct()--------
 		List<String> performances1 = server.getPeformanceIDsForAct("ACT1");
 		
-		for (String p : performances1) { 
-			System.out.println(p);
-		}
+		System.out.println(performances1);
 		
 		//--------------issueTicket()------------------
 		String ticket1 = server.issueTicket(performanceID1, 1, 1);
-//		String ticket2 = server.issueTicket(performanceID1, 5, 3);
-//		String ticket3 = server.issueTicket(performanceID1, 2, 1);
-//		String ticket4 = server.issueTicket(performanceID1, 1, 2);
-//		String ticket5 = server.issueTicket(performanceID1, 5, 5);
+		String ticket2 = server.issueTicket(performanceID1, 1, 2);
+		String ticket3 = server.issueTicket(performanceID1, 2, 1);
+		String ticket4 = server.issueTicket(performanceID1, 1, 2);
 		
-		String ticket6 = server.issueTicket(performanceID3, 1, 3);
-		String ticket7 = server.issueTicket(performanceID3, 4, 2);
-		String ticket8 = server.issueTicket(performanceID3, 5, 1);
+		String ticket5 = server.issueTicket(performanceID3, 7, 7);
+		String ticket6 = server.issueTicket(performanceID3, 7, 6);
+		String ticket7 = server.issueTicket(performanceID3, -1, 1);
 		
 		System.out.println(ticket1);
+		System.out.println(ticket2);
+		System.out.println(ticket3);
+		System.out.println(ticket4);
+		System.out.println(ticket5);
+		System.out.println(ticket6);
+		System.out.println(ticket7);
+		
+		//-------------getTicketIDsForPerformance()-------------
+		List<String> tickets = server.getTicketIDsForPerformance(performanceID1);
+		
+		System.out.println(tickets);
 		
 		//--------------seatsAvailable()------------
 		List<String> seatList = server.seatsAvailable(performanceID1);
