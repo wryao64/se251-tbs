@@ -108,12 +108,12 @@ public class CLI {
 		System.out.println(seatList);
 		
 		//--------------salesReport()------------
-		List<String> salesReport = server.salesReport(actID1);
+		List<String> salesReport = server.salesReport(actID2);
 		
 		System.out.println(salesReport);
 	}
 }
-//
+
 //package tbs.client;
 //
 //import java.util.List;

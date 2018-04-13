@@ -234,9 +234,6 @@ public class TBSServerImpl implements TBSServer {
 			Ticket ticket = thisPerf.newTicket(ticketID, rowNumber, seatNumber);
 			ticketMap.put(ticketID, ticket);
 			
-			// sets seat to be unavailable
-			thisPerf.seatSold(rowNumber, seatNumber);
-			
 			return ticketID;
 		}
 	}
@@ -264,7 +261,8 @@ public class TBSServerImpl implements TBSServer {
 			// finds all performances for the given act
 			for (String p : performanceIDs) {
 				Performance performance = performanceMap.get(p);
-				salesReport.add(performance.performanceDetails());
+				Sales perfSales = performance.getSales();
+				salesReport.add(perfSales.performanceDetails());
 			}
 			
 			return salesReport;

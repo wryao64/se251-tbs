@@ -12,8 +12,7 @@ public class Performance {
 	private String _premiumPriceStr;
 	private String _cheapSeatsStr;
 	private boolean[][] _seats;
-	private int _premTicketsSold = 0;
-	private int _cheapTicketsSold = 0;
+	private Sales _sales;
 	
 	public Performance(String actID, String theatreID, Integer theatreDim, String startTimeStr, 
 			String premiumPriceStr, String cheapSeatsStr) {
@@ -25,6 +24,7 @@ public class Performance {
 		_cheapSeatsStr = cheapSeatsStr;
 		_seats = new boolean[theatreDim][theatreDim];
 		this.setSeats();
+		_sales = new Sales(_performanceID, _startTimeStr, _premiumPriceStr, _cheapSeatsStr);
 	}
 	
 	private void setSeats() {
@@ -42,6 +42,10 @@ public class Performance {
 	
 	public String getActID() {
 		return _actID;
+	}
+	
+	public Sales getSales() {
+		return _sales;
 	}
 	
 	public boolean checkIfSeatExists(int rowNumber, int seatNumber) {
@@ -78,37 +82,6 @@ public class Performance {
 		}
 		
 		return availableSeatList;
-	}	
-	
-	public void seatSold(int rowNumber, int seatNumber) {
-		_seats[rowNumber - 1][seatNumber - 1] = false;
-		
-		// premium seats are in the front half of the theatre
-		double premSeatRows = Math.floor(_seats.length / 2);
-		
-		if (rowNumber <= premSeatRows) {
-			_premTicketsSold++;
-		} else {
-			_cheapTicketsSold++;
-		}
-	}
-	
-	public String calculatePriceOfTicketsSold() {
-		String dollar = "$";
-		
-		int premiumPrice = Integer.parseInt(_premiumPriceStr.substring(1));
-		int cheapPrice = Integer.parseInt(_cheapSeatsStr.substring(1));
-		
-		int totalPrice = _premTicketsSold * premiumPrice + _cheapTicketsSold * cheapPrice;
-		
-		return dollar + totalPrice;
-	}
-	
-	public String performanceDetails() {
-		int ticketsSold = _premTicketsSold + _cheapTicketsSold;
-		String totalPrice = calculatePriceOfTicketsSold();
-
-		return _performanceID + "\t" + _startTimeStr + "\t" + ticketsSold + "\t" + totalPrice;
 	}
 	
 	public Ticket newTicket(String ticketID, int rowNumber, int seatNumber) {
@@ -124,6 +97,7 @@ public class Performance {
 			_ticketID = ticketID;
 			_rowNumber = rowNumber;
 			_seatNumber = seatNumber;
+			seatSold(_rowNumber, _seatNumber);
 		}
 		
 		public String getPerformanceID() {
@@ -132,6 +106,15 @@ public class Performance {
 		
 		public String getTicketID() {
 			return _ticketID;
+		}
+		
+		private void seatSold(int rowNumber, int seatNumber) {
+			_seats[rowNumber - 1][seatNumber - 1] = false;
+			
+			// premium seats are in the front half of the theatre
+			double premSeatRows = Math.floor(_seats.length / 2);
+			
+			_sales.ticketSold(rowNumber, premSeatRows);
 		}
 	}
 }
