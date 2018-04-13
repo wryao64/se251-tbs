@@ -17,11 +17,11 @@ public class Checker {
 	
 	private boolean checkPriceFormat(String price) {
 		for (int i = 0; i < price.length(); i++) {
-			if (i == 0) {
+			if (i == 0) { // character at index 0 must be $ sign
 				if (price.charAt(i) != '$') {
 					return false;
 				}
-			} else {
+			} else { // checks that all other characters are numbers
 				if (!Character.isDigit(price.charAt(i))) {
 					return false;
 				}

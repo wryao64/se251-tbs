@@ -16,17 +16,19 @@ import java.io.IOException;
 
 public class TBSServerImpl implements TBSServer {
 	// Theatre ID at index 1
-	// Theatre dimension at index 2
-	// Theatre area at index 3
 	private static final int T_ID_IND = 1;
+	// Theatre dimension at index 2
 	private static final int T_DIM_IND = 2;
+	// Theatre area at index 3
 	private static final int T_AREA_IND = 3;
+	// Prefix for ID strings
 	private static final String ARTIST_ID_BASE = "A";
 	private static final String TICKET_ID_BASE = "TKT";
 	
 	Checker checker = new Checker();
 	
 	private TreeSet<String> theatreIDSet = new TreeSet<String>();
+	// key: theatreID, value: dimension/area
 	private TreeMap<String, Integer> theatreDimensionMap = new TreeMap<String, Integer>();
 	private TreeMap<String, Integer> theatreAreaMap = new TreeMap<String, Integer>();
 	
@@ -50,12 +52,14 @@ public class TBSServerImpl implements TBSServer {
 			while ((line = data.readLine()) != null) {
 				String[] theatreData = line.split(separator);
 				
-				try {
+				try { // checks that the dimensions and area are integers
 					String theatreID = theatreData[T_ID_IND];
 					Integer dimensions = Integer.valueOf(theatreData[T_DIM_IND]);
 					String strArea = theatreData[T_AREA_IND];
+					// gets rid of the " at the end of strArea
 					strArea = strArea.substring(0, strArea.length() - 1);
 					Integer area = Integer.valueOf(strArea);
+					
 					theatreIDSet.add(theatreID);
 					theatreDimensionMap.put(theatreID, dimensions);
 					theatreAreaMap.put(theatreID, area);
@@ -107,12 +111,15 @@ public class TBSServerImpl implements TBSServer {
 	public List<String> getActIDsForArtist(String artistID) {
 		List<String> actsForArtist = new Vector<String>();
 		
+		// checks for missing or invalid ID
 		String errorMsg = checker.checkID(artistID, artistMap);
 		if (errorMsg != "") {
 			actsForArtist.add(errorMsg);
 			return actsForArtist;
 		} else {
 			Collection<Act> acts = actMap.values();
+			
+			// finds all acts for the given artist
 			for (Act a : acts) {
 				if (artistID.equals(a.getArtistID())) { 
 					actsForArtist.add(a.getActID()); 
@@ -126,12 +133,15 @@ public class TBSServerImpl implements TBSServer {
 	public List<String> getPeformanceIDsForAct(String actID) {
 		List<String> performancesForAct = new Vector<String>();
 		
+		// checks for missing or invalid ID
 		String errorMsg = checker.checkID(actID, actMap);
 		if (errorMsg != "") {
 			performancesForAct.add(errorMsg);
 			return performancesForAct;
 		} else {
 			Collection<Performance> performances = performanceMap.values();
+			
+			// finds all performances for the given act
 			for (Performance p : performances) { 
 				if (actID.equals(p.getActID())) { 
 					performancesForAct.add(p.getPerformanceID()); 
@@ -145,12 +155,15 @@ public class TBSServerImpl implements TBSServer {
 	public List<String> getTicketIDsForPerformance(String performanceID) {
 		List<String> ticketsForPerformance = new Vector<String>();
 		
+		// checks for missing or invalid ID
 		String errorMsg = checker.checkID(performanceID, performanceMap);
 		if (errorMsg != "") {
 			ticketsForPerformance.add(errorMsg);
 			return ticketsForPerformance;
 		} else {
 			Collection<Ticket> tickets = ticketMap.values();
+			
+			// finds all tickets for the given performance
 			for (Ticket t : tickets) {
 				if (performanceID.equals(t.getPerformanceID())) {
 					ticketsForPerformance.add(t.getTicketID());
@@ -164,6 +177,7 @@ public class TBSServerImpl implements TBSServer {
 	public String addArtist(String name) {
 		name = name.trim();
 		
+		// checks for missing or already existing name
 		String errorMsg = checker.checkName(name, artistMap);
 		if (errorMsg != "") {
 			return errorMsg;
@@ -175,7 +189,7 @@ public class TBSServerImpl implements TBSServer {
 	}
 
 	public String addAct(String title, String artistID, int minutesDuration) {
-		// check for errors (missing/non-existing/invalid data)
+		// check for missing/invalid data
 		String errorMsg = checker.checkParamsForAct(title, artistID, minutesDuration, artistMap);
 		
 		if (errorMsg != "") {
@@ -191,7 +205,7 @@ public class TBSServerImpl implements TBSServer {
 
 	public String schedulePerformance(String actID, String theatreID, String startTimeStr,
 			String premiumPriceStr, String cheapSeatsStr) {
-		// checks for errors (missing or non-existing data & formatting)
+		// checks for missing/invalid data & formatting
 		String errorMsg = checker.checkParamsForPerformance(actID, theatreID, startTimeStr, 
 				premiumPriceStr, cheapSeatsStr, actMap, theatreIDSet);
 		
@@ -209,7 +223,7 @@ public class TBSServerImpl implements TBSServer {
 
 	public String issueTicket(String performanceID, int rowNumber, int seatNumber) {
 		Performance thisPerf = performanceMap.get(performanceID);
-		
+		// checks for missing/invalid data
 		String errorMsg = checker.checkParamsForTicket(performanceID, rowNumber, seatNumber, 
 				performanceMap, thisPerf);
 		
@@ -229,7 +243,7 @@ public class TBSServerImpl implements TBSServer {
 
 	public List<String> seatsAvailable(String performanceID) {
 		List<String> availableSeatList = new Vector<String>();
-
+		
 		Performance performance = performanceMap.get(performanceID);
 		availableSeatList = performance.findAvailableSeats();
 
@@ -239,19 +253,22 @@ public class TBSServerImpl implements TBSServer {
 	public List<String> salesReport(String actID) {
 		List<String> salesReport = new Vector<String>();
 		
+		// checks for missing/invalid ID
 		String errorMsg = checker.checkID(actID, actMap);
 		if (errorMsg != "") {
 			salesReport.add(errorMsg);
 			return salesReport;
+		} else {
+			List<String> performanceIDs = getPeformanceIDsForAct(actID);
+			
+			// finds all performances for the given act
+			for (String p : performanceIDs) {
+				Performance performance = performanceMap.get(p);
+				salesReport.add(performance.performanceDetails());
+			}
+			
+			return salesReport;
 		}
-		
-		List<String> performanceIDs = getPeformanceIDsForAct(actID);
-		for (String p : performanceIDs) {
-			Performance performance = performanceMap.get(p);
-			salesReport.add(performance.performanceDetails());
-		}
-		
-		return salesReport;
 	}
 
 	public List<String> dump() {

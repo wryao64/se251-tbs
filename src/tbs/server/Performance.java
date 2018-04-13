@@ -30,7 +30,7 @@ public class Performance {
 	private void setSeats() {
 		for (int row = 0; row < _seats.length; row++) {
 			for (int seatPos = 0; seatPos < _seats.length; seatPos++) {
-				// all seats are free (true)
+				// all seats are available (true)
 				_seats[row][seatPos] = true;
 			}
 		}
@@ -45,6 +45,8 @@ public class Performance {
 	}
 	
 	public boolean checkIfSeatExists(int rowNumber, int seatNumber) {
+		// rowNumber/seatNumber corresponds to that number - 1 as arrays start at 0,
+		// but rows/seats start at 1
 		if ((rowNumber - 1) >= _seats.length || (rowNumber - 1) < 0 || 
 				(seatNumber - 1) >= _seats.length || (seatNumber - 1) < 0) {
 			return false;
@@ -54,6 +56,8 @@ public class Performance {
 	}
 	
 	public boolean checkIfSeatIsAvailable(int rowNumber, int seatNumber) {
+		// rowNumber/seatNumber corresponds to that number - 1 as arrays start at 0,
+		// but rows/seats start at 1
 		if (_seats[rowNumber - 1][seatNumber - 1] == false) {
 			return false;
 		} else {
@@ -64,6 +68,7 @@ public class Performance {
 	public List<String> findAvailableSeats() {
 		List<String> availableSeatList = new Vector<String>();
 		
+		// finds all seats that are available
 		for (int row = 0; row < _seats.length; row++) {
 			for (int seatPos = 0; seatPos < _seats.length; seatPos++) {
 				if (_seats[row][seatPos] == true) {
@@ -78,7 +83,9 @@ public class Performance {
 	public void seatSold(int rowNumber, int seatNumber) {
 		_seats[rowNumber - 1][seatNumber - 1] = false;
 		
+		// premium seats are in the front half of the theatre
 		double premSeatRows = Math.floor(_seats.length / 2);
+		
 		if (rowNumber <= premSeatRows) {
 			_premTicketsSold++;
 		} else {
