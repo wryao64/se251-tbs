@@ -1,6 +1,7 @@
 package tbs.server;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
@@ -104,6 +105,8 @@ public class TBSServerImpl implements TBSServer {
 		for (String a : artistNamesColl) {
 			artistNames.add(a);
 		}
+		
+		Collections.sort(artistNames);
 		
 		return artistNames;
 	}
